@@ -336,6 +336,8 @@ let cat="hello"; println(cat)
     * An optional value is currently nil, but a non-nil value is essential for subsequent code to execute
   * Assertion cause app to terminate, an effective way to check conditions before app is published
 
+[Back to top](#swift-cheatsheet)
+
 ## Basic Operators
 
 ### Overview
