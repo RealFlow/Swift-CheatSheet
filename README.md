@@ -2373,7 +2373,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       * Designated init delegates up
       * Convenience init delegates across
 
-      * ![](resources/initializerDelegation02_2x.png){ width=50% }
+      * ![](resources/initializerDelegation02_2x.png = 250x)
     
   * Init Two-Phase
     * Phase 1
@@ -2440,7 +2440,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     let oneBacon = RecipeIngredient(name: "Bacon")
     let sixEggs = RecipeIngredient(name: "Eggs", quantity: 6)
     ```
-    * ![](resources/initializersExample03_2x.png)
+    * ![](resources/initializersExample03_2x.png = 250x)
 
   * Failable Inits
     * A failable initializer creates an optional value of the type it initializes
