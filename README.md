@@ -22,6 +22,7 @@ Notes taken from [The Swift Programming Language](https://developer.apple.com/li
 - [Deinitialization](#deinitialization)
 - [Automatic Reference Counting](#automatic-reference-counting)
 - [Optional Chaining](#optional-chaining)
+- [Error Handling](#error-handling)
 - [Type Casting](#type-casting)
 - [Nested Types](#nested-types)
 - [Extensions](#extensions)
@@ -2628,9 +2629,6 @@ class SomeClass {
 
   * Process of querying and calling properties, methods, and subscripts on an optional that might currently be nil
   * If the called entity is nil, it will return nil if not the value
-  * Multiple queries can be chained together, and fail gracefully if any of the link chain is nil
-  * Note
-    * Optional chaining in Swift similar to messaging nil in Obj-C, but that works for any type, and that can be checked for success or failure.
 
 ### Optional Chaining as an Alternative to Forced Unwrapping
 
@@ -2646,6 +2644,7 @@ class SomeClass {
     }
 
     let john = Person()
+    john.residence?.address = someAddress  // if residence is nil, the setter is discarded
     let roomCount = john.residence!.numberOfRooms // this trigger a runtime error
     ```
 
@@ -2659,166 +2658,43 @@ class SomeClass {
     }
     ```
 
-### Defining Model Classes for Optional Chaining
-
-  * Optional chaining can be more than on level
-  * Model classes
-
+  * Properties
     ```swift
-    class Person {
-        var residence: Residence?
-    }
-
-    class Residence {
-        var rooms = [Room]()
-        var numberOfRooms: Int {
-            return rooms.count
-        }
-        subscript(i: Int) -> Room {
-            get {
-                return rooms[i]
-            }
-            set {
-                rooms[i] = newValue
-            }
-        }
-        func printNumberOfRooms() {
-            println("The number of rooms is \(numberOfRooms)")
-        }
-        var address: Address?
-    }
-
-    class Room {
-        let name: String
-        init(name: String) { [self.name][2] = name }
-    }
-
-    class Address {
-        var buildingName: String?
-        var buildingNumber: String?
-        var street: String?
-        func buildingIdentifier() -> String? {
-            if buildingName != nil {
-                return buildingName
-            } else if buildingNumber != nil {
-                return buildingNumber
-            } else {
-                return nil
-            }
-        }
-    }
+    john.residence?.numberOfRooms 
     ```
 
-### Accessing Properties Through Optional Chaining
+  * Methods
+    * Methods with no return have an implicit value of Void, it means they return a value of () or an empty tuple.
+    * If you call this on an optional value with optional chaining, the return type will be Void? not Void, because return values are always of an optional type when called through optional chaining
+      ```swift
+      if john.residence?.printNumberOfRooms() != nil { //code... } 
+      ```
 
-  * Use optional chaining to access property on optional value or to check if property access is successful
-
-    ```swift
-    let john = Person()
-    if let roomCount = john.residence?.numberOfRooms {
-        println("John's residence has \(roomCount) room(s).")
-    } else {
-        println("Unable to retrieve the number of rooms.")
-    }
-    ```
-
-### Calling Methods Through Optional Chaining
-
-  * Use optional chaining to call a method on an optional value or to check whether a method call is successful, even if the method does not define a return value
-
-    ```swift
-    * Residence#printNumberOfRooms
-    func printNumberOfRooms() {
-      println("The number of rooms is \(numberOfRooms)")
-    }
-    ```
-
-  * Method has no return tip, bbut have an implicit value of Void
-    * Means they return a value of () or an empty tubule.
-  * If you call this on an optional value with optional chaining, the return type will be Void/ not Void, because the return values are always of an optional type when called with  optional chaining
-
-    ```swift
-    if john.residence?.printNumberOfRooms() != nil {
-      println("It was possible to print the number of rooms.")
-    } else {
-      println("It was not possible to print the number of rooms.")
-    }
-    // prints "It was not possible to print the number of rooms.
-    ```
-
-### Accessing SubscriptsThrough Optional Chaining
-
-  * Overview
-    * To retrieve and set a value of a subscript on an optional value, and to check if the subscript call is successful
-    * Note
-      * Place the question mark before the subscript's braces, not after
-
+  * Subscripts
+    * For get and set, question mark before the subscript's braces
       ```swift
       if let firstRoomName = john.residence?[0].name " { ... }
       ```
-
-  * Accessing Subscripts of Optional Type
-    * If a subscript returns a value of optional type, such as the key subscript of Swift's Dictionary type, place  question mark after the subscript's closing bracket to chain on its optional return value.
-
+    * If a subscript returns a value of optional type, such as the key subscript of Swift's Dictionary type, question mark after the subscript's closing bracket to chain on its optional return value.
       ```swift
       var testScores = ["Dave": [86, 82, 84], "Bev": [79, 94, 81]]
       testScores["Dave"]?[0] = 91
       testScores["Bev"]?[0]++
-      testScores["Brian"]?[0] = 72
-
-      // the "Dave" array is now [91, 82, 84] and the "Bev" array is now [80, 94, 81]
       ```
 
 ### Linking Multiple Levels of Chaining
 
   * You can link multiple levels of optional chaining
     * If the type you are trying to retrieve is not optional, it will become optional because of optional chaining
-    * If the type you are trying to retrieve is already optional, it will not become more optional because of the chaining
-    * Thus if you retrieve an Int through optional chaining, and Int? is always returned
-
-
+    * If the type you are trying to retrieve is already optional, it will continue be optional
       ```swift
-      if let johnsStreet = john.residence?.address?.street {
-          println("John's street name is \(johnsStreet).")
-      } else {
-          println("Unable to retrieve the address.")
-      }
-      // prints "Unable to retrieve the address.
-      let johnsAddress = Address()
-      johnsAddress.buildingName = "The Larches"
-      johnsAddress.street = "Laurel Street"
-      john.residence!.address = johnsAddress
-
-      if let johnsStreet = john.residence?.address?.street {
-          println("John's street name is \(johnsStreet).")
-      } else {
-          println("Unable to retrieve the address.")
-      }
-
-      // prints "John's street name is Laurel Street.
+      let johnsStreet = john.residence?.address?.street
+      let beginsWithThe = john.residence?.address?.buildingIdentifier()?.hasPrefix("The")
       ```
 
-### Chaining on Methods with Optional Return Values
+[Back to top](#swift-cheatsheet)
 
-  * Use optional chaining to call a method that returns a value of optional type, and to chain the method's return value if needed
-
-
-    ```swift
-    if let buildingIdentifier = john.residence?.address?.buildingIdentifier() {
-        println("John's building identifier is \(buildingIdentifier).")
-    }
-    // prints "John's building identifier is The Larches."
-    if let beginsWithThe =
-        john.residence?.address?.buildingIdentifier()?.hasPrefix("The") {
-            if beginsWithThe {
-                println("John's building identifier begins with \"The\".")
-            } else {
-                println("John's building identifier does not begin with \"The\".")
-            }
-    }
-    // prints "John's building identifier begins with "The"."
-
-    ```
+## Error Handling
 
 [Back to top](#swift-cheatsheet)
 
