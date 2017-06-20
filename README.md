@@ -2066,7 +2066,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Overview
 
-  * Classes, structures, enumerations can define subscripts
+  * Classes, Structures, Enumerations can define subscripts
   * Shortcuts for accessing the member elements of a collection, list or sequence
   * Use subscripts to set/get values by index without the need for separate methods
     * E.g. someArray[index], someDictionary[key]
@@ -2078,25 +2078,15 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 ### Subscript Syntax
 
   * Similar to instance methods, but can be read-write or read-only
-
     ```swift
     subscript(index: Int) -> Int {
-        get {
-            // return an appropriate subscript value here
-        }
-        set(newValue) {
-            // perform a suitable setting action here
-        }
+        get { // return an appropriate subscript value here }
+        set(newValue) { // perform a suitable setting action here }
     }
     ```
 
     * As with read-only computed properties, you can drop the get keyword:
-
       ```swift
-      subscript(index: Int) -> Int {
-          // return an appropriate subscript value here
-      }
-
       struct TimesTable {
           let multiplier: Int
           subscript(index: Int) -> Int {
@@ -2111,51 +2101,49 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 ### Subscript Usage
 
   * Exact meaning of "subscript" depends on the context which it is used
-
     ```swift
     var numberOfLegs = ["spider": 8, "ant": 6, "cat": 4]
     numberOfLegs["bird"] = 2
     ```
 
     * Dictionary type implements its key-value subscripting, takes and receives an optional type
-
       ```swift
       numberofLegs["bird"] returns a value of type Int?
       ```
 
 ### Subscript Options
 
-  * Can take any number of input parameters, and can be of any type
-    * Subscripts can also return any type
-    * Can you variable parameters, and variadic parameters
-    * No in-out params or default parameter values
-  * There could be more than one subscript implementations, which subscript to used will be inferred based on the type s of the value or values that are contained in subscript braces, i.e. subscript overloading
-  * Support multiple parameters
+  * Can receive any number of input parameters of any type
+  * Can return any type
+  * Can use variadic parameters
+  * Cannot use in-out params or default parameter values
+  * Class and Structure Subscript overloading:
+    * more than one subscript if needed inferring types
 
-    ```swift
-    struct Matrix {
-        let rows: Int, columns: Int
-        var grid: [Double]
-        init(rows: Int, columns: Int) {
-            self.rows = rows
-            self.columns = columns
-            grid = Array(count: rows * columns, repeatedValue: 0.0)
-        }
-        func indexIsValidForRow(row: Int, column: Int) -> Bool {
-            return row >= 0 && row < rows && column >= 0 && column < columns
-        }
-        subscript(row: Int, column: Int) -> Double {
-            get {
-                assert(indexIsValidForRow(row, column: column), "Index out of range")
-                return grid[(row * columns) + column]
-            }
-            set {
-                assert(indexIsValidForRow(row, column: column), "Index out of range")
-                grid[(row * columns) + column] = newValue
-            }
-        }
-    }
-    ```
+  ```swift
+  struct Matrix {
+      let rows: Int, columns: Int
+      var grid: [Double]
+      init(rows: Int, columns: Int) {
+          self.rows = rows
+          self.columns = columns
+          grid = Array(count: rows * columns, repeatedValue: 0.0)
+      }
+      func indexIsValidForRow(row: Int, column: Int) -> Bool {
+          return row >= 0 && row < rows && column >= 0 && column < columns
+      }
+      subscript(row: Int, column: Int) -> Double {
+          get {
+              assert(indexIsValidForRow(row, column: column), "Index out of range")
+              return grid[(row * columns) + column]
+          }
+          set {
+              assert(indexIsValidForRow(row, column: column), "Index out of range")
+              grid[(row * columns) + column] = newValue
+          }
+      }
+  }
+  ```
 
 [Back to top](#swift-cheatsheet)    
 
@@ -2163,15 +2151,12 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Overview
 
-  * Classes can also add property observers to inherited properties
+  * Classes can add property observers to inherited properties
   * Property observers can be added to any property, stored or computed
 
 ### Defining a base class
 
-  * Any class that does not inherit from another class is known s base class
   * Swift classes do not inherit from a universal base class
-  * Classes you define without a superclass, are base classes.
-
     ```swift
     class Vehicle {
         var currentSpeed = 0.0
@@ -2188,21 +2173,19 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     ```
 
 ### Subclassing
-
-  * Extending a new class based on an existing class
-
-    ```swift
-    class SomeSubclass: SomeSuperClass { ...}
-    ```
+  ```swift
+  class Bicycle: Vehicle {
+    var hasBasket = false
+  }
+  ```
 
 ### Overriding
 
   * Use override keyword to clearly show the intent or error
     * Compiler will also check if you are overriding any of the superclass methods
   * Accessing superclass Methods, Properties, and Subscripts
-    * super.someMethod, super.someProperty, super[someIndex]
-  * Overriding methods
-
+    * super.someMethod(), super.someProperty, super[someIndex]
+  * Overriding Methods
     ```swift
     class Train: Vehicle {
         override func makeNoise() {
@@ -2211,45 +2194,44 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     }
     ```
 
-  * Overring properties
-    * To provide your own implementation or to add property observer
-  * Overriding property Getters and Setters
-    * You can present an inherited read-only property as read-write property
-    * You can not present an inherited read-write property as a read only
-    * Note
-      * If you provide a setter, you need to provide the getter as well
-      * If you don't want to modify the inherited property's value within the overriding getter, just return the super class value, i.e. super.someProperty
-
-      ```swift
-      class Car: Vehicle {
-        var gear = 1
-        override var description: String {
-          return super.description + " in gear \(gear)"
-        }
-      }
-      ```
-
-  * Overriding property Observers
-    * Override the property to add the observers
-    * Note
-      * You can not add property observers to inherited constant stored properties or inherited read-only computed properties, because these properties cannot be set
-      * You can't override both setter and property observer for the same property
-      * If you already provide custom setter, observe any value changes from within the custom setter instead
-    * Example:
-
-      ```swift
-      class AutomaticCar: Car {
-        override var currentSpeed: Double {
-          didSet {
-            gear = Int(currentSpeed / 10.0) + 1
+  * Overring Properties
+    * Overriding property Getters and Setters (regardless property is stored / computed)
+      * You can present an inherited read-only property as read-write property
+      * You cannot present an inherited read-write property as a read only
+      * Note
+        * If you provide a setter, you need to provide the getter as well
+        * If you don't want to modify the inherited property's value within the overriding getter, just return the super class value, i.e. super.someProperty
+        ```swift
+        class Car: Vehicle {
+          var gear = 1
+          override var description: String {
+            return super.description + " in gear \(gear)"
           }
         }
-      }
-      ```
+        ```
+
+    * Overriding property Observers
+      * Override the property to add the observers
+      * Note
+        * You cannot add property observers to inherited ('cause cannot be set): 
+          * constant stored properties
+          * read-only computed properties
+        * You cannot override both property observer and setter for the same property
+        * If you already provide custom setter, observe any value changes from the setter
+      * Example:
+        ```swift
+        class AutomaticCar: Car {
+          override var currentSpeed: Double {
+            didSet {
+              gear = Int(currentSpeed / 10.0) + 1
+            }
+          }
+        }
+        ```
 
 ### Preventing Overrides
 
-  * Mark it as "final", e.g. final var, final fund, final class fund, final subscript
+  * Mark it as "final", e.g. final var, final func, final class func, final subscript
 
 [Back to top](#swift-cheatsheet)
 
