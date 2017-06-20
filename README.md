@@ -2373,7 +2373,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       * Designated init delegates up
       * Convenience init delegates across
 
-      * ![](resources/initializerDelegation02_2x.png)
+      * ![](resources/initializerDelegation02_2x.png){ width=50% }
     
   * Init Two-Phase
     * Phase 1
