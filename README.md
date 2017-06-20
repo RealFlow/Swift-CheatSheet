@@ -381,10 +381,10 @@ a ? b : c
   * Addition operator also supported for string "hello " + "world"
   * Two Character values, one char, one String, can be added together
     ```swift
-    let dog = "\u{1f436}" 
+    let dog: Character = ""
     let cow: Character = ""
     let dogCow = dog + cow
-    // dogCow is equal to "
+    // dogCow is equal to ""
     ```
 
 ### Arithmetic Operators
