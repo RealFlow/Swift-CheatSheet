@@ -2498,76 +2498,18 @@ class SomeClass {
 
 ### Overview
 
-  * Called immediately before a class instance is deallocated
+  * Called immediately before class dealloc
   * deinit keyword, only for class types
+  * Not allowed to call a deinit
+  * deinits are inherited and called automatically
 
-### How Deinitialization works
-
-  * Swift uses ARC to manage memory for the instance, typically you won't need to perform manual cleanup
-  * When you are working with your own resources, you probably would, ex.g. create a custom class to open a file/write some data to it, you need to close the file before the class instance is deallocated
-  * You are not allowed to call a reinit yourself
-  * Superclass deinits are inherited by their subclasses, and called automatically at the end of a subclass deinit. Always called even if subclass does not implement a reinit.
-
-### Deinitializers in Action
-
-```swift
-struct Bank {
-    static var coinsInBank = 10_000
-
-    static func vendCoins(var numberOfCoinsToVend: Int) -> Int {
-        numberOfCoinsToVend = min(numberOfCoinsToVend, coinsInBank)
-        coinsInBank -= numberOfCoinsToVend
-        return numberOfCoinsToVend
-
-    }
-
-    static func receiveCoins(coins: Int) {
-        coinsInBank += coins
-    }
-
-}
-
-class Player {
-    var coinsInPurse: Int
-
-    init(coins: Int) {
-        coinsInPurse = Bank.vendCoins(coins)
-    }
-
-    func winCoins(coins: Int) {
-        coinsInPurse += Bank.vendCoins(coins)
-    }
-
-    deinit {
-        Bank.receiveCoins(coinsInPurse)
-    }
-}
-
-var playerOne: Player? = Player(coins: 100)
-
-println("A new player has joined the game with \(playerOne!.coinsInPurse) coins")
-// prints "A new player has joined the game with 100 coins"
-
-println("There are now \(Bank.coinsInBank) coins left in the bank")
-// prints "There are now 9900 coins left in the bank
-
-playerOne!.winCoins(2_000)
-
-println("PlayerOne won 2000 coins & now has \(playerOne!.coinsInPurse) coins")
-// prints "PlayerOne won 2000 coins & now has 2100 coins"
-
-println("The bank now only has \(Bank.coinsInBank) coins left")
-// prints "The bank now only has 7900 coins left
-
-playerOne = nil
-
-println("PlayerOne has left the game")
-// prints "PlayerOne has left the game"
-
-println("The bank now has \(Bank.coinsInBank) coins")
-// prints "The bank now has 10000 coins
-```
-
+  ```swift
+  class Player {
+      deinit {
+          // code to deinit
+      }
+  }
+  ```
 [Back to top](#swift-cheatsheet)
 
 ## Automatic Reference Counting
