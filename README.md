@@ -1725,15 +1725,17 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 ### Overview
 
   * Associate values with a particular class, structure or enumeration
-  * Stored properties store constant and variable values as part of an instance
-    * Provided only by classes and structures
-  * Computed properties are provided by classes, structures and enumerations.
-  * Stored and computed properties are associated with instances, but properties can be associated to the type itself, known as type properties
+  * Instance Properties
+    * Stored Property: provided only by classes and structures
+      * Lazy Stored Property: Initial value is not calculated until the first time it is used
+    * Computed Property: provided by classes, structures and enumerations.
+  * Type Properties
+    * Provided by classes, structures and enumerations.
   * You can define property observer, for properties you define or properties that a subclass inherits from its superclass.
 
 ### Stored Properties
 
-  * Is a constant or variable that is stored as part of an instance of a particular class or structure
+  * Is a constant (let) or variable (var) that is stored as part of an instance of a particular class or structure
 
     ```swift
     struct FixedLengthRange {
@@ -1746,7 +1748,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     ```
 
   * Stored Properties of Constant Structure Instances
-    * When an instance of a value type is marked as a constant, so are all of its properties, but not true for classes.
+    * When an instance of a Value type (i.e Structure) is marked as a constant, so are all of its properties, but not true for classes.
 
       ```swift
       let someStruct = SomeStruct(x: 0, y: 0)
@@ -1758,17 +1760,14 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     * Use 'lazy' modifier before its declaration
     * Must always declare lazy as a var
     * Useful for a property that is dependent on outside factors, whose values are not known after an initialisation completes, e.g. computationally expensive
-
       ```swift
       class DataImporter {
         var fileName = "data.txt"
-        // the DataImporter class would provide data importing functionality here
       }
 
       class DataManager {
         lazy var importer = DataImporter()
         var data = [String]()
-        // the DataManager class would provide data management functionality here
       }
 
       let manager = DataManager()
@@ -1776,9 +1775,9 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       manager.data.append("Some more data")
       // the DataImporter instance for the importer property has not yet been created
       ```
-
     * DataImporter instance for the importer property is only created when the importer property is first accessed, e.g.
       * manager.importer.fileName
+
   * Stored Properties and Instance Variables
     * Obj-C provides two ways to store values and references as apart of a class instance
       * In additional to properties, you can use instance variables as a backing store for values store in a property
@@ -1788,8 +1787,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Computed Properties
 
-  * Do not store a value, provides a getter and optional setting to retrieve and set other properties/values directly
-
+  * Do not store a value, provides a getter and optional setter to retrieve and set other properties/values directly
     ```swift
     struct Point {
         var x = 0.0, y = 0.0
@@ -1820,9 +1818,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     square.center = Point(x: 15.0, y: 15.0)
     ```
 
-  * Shorthand Setting Declaration
+  * Shorthand Setter Declaration
     * If computed property's setting does not define a name for the new value to be set, "newValue" is used:
-
       ```swift
       set {
         origin.x = newValue.x - (size.width / 2)
@@ -1848,19 +1845,19 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Property Observers
 
-  * You can add property observers to any stored properties you define, apart from the lazy stored properties
-  * Any inherited property by overriding the property within a subclass
+  * You can add property observers to:
+    * Stored properties excepting lazy stored properties
+    * Inherited properties by overriding the property within a subclass
   * Note
     * You don't need to define property observers for non-overridden computed properties, because you can observe and respond to changes to their value directly from within the computed property's setter.
   * You have the option to define either or both of these observers on a property
-    * willSet - called before the value is stored
+    * _willSet_ - called before the value is stored
       * default param "newValue", you can override
-    * didSet - called immediately after the new value is stored
+    * _didSet_ - called immediately after the new value is stored
       * default old property param name is "oldValue"
   * Note
     * willSet and didSet are not called when a property is first initialised, only called when its value is set outside the initialisation context
     * If you assign a value to a property within its own didSet observer, the new value will replace the one that you just set
-
       ```swift
       class StepCounter {
         var totalSteps: Int = 0 {
@@ -1869,17 +1866,19 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
         }
       }
       ```
+    * If you pass a property that has observers to a function as an in-out parameter, the willSet and didSet observers are always called. This is because of the copy-in copy-out memory model for in-out parameters: The value is always written back to the property at the end of the function.
 
 ### Global and Local Variables
 
-  * Capabilities above to observe properties are for both global and local properties
+  * Computing and Observable capabilities are for both Global and Local properties
   * Global variables are defined outside any function, method, closure or type context
   * Global constants and variables are always computed lazily, similar to Lazy Stored Properties
+  * Local constants and variables are never computed lazily
 
 ### Type Properties
 
-  * For value types (structures and enumerations), you can define stored and computed type properties,
-  * For classes, you can define computed type properties only
+  * For Structures and enumerations (value types), you can define stored and computed type properties,
+  * For Classes, you can define computed type properties only
   * Stored type properties for value types can be variables or constants.
     * Computed type properties are always declared as variable properties in the same way as computed instance properties
   * Type Property Syntax
@@ -1911,10 +1910,12 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
     * The computed type property are for read-only, but you can define read-write computed type properties with the same syntax for computed instance properties
   * Querying and Setting Type Properties
-
     ```swift
-    println(SomeClass.computedTypeProperty)    // prints "42"
-    println(SomeStructure.storedTypeProperty)  // prints "Some value."
+    println(SomeClass.computedTypeProperty)
+    println(SomeStructure.storedTypeProperty)
+    println(SomeStructure.computedTypeProperty)
+    println(SomeEnumeration.storedTypeProperty)
+    println(SomeEnumeration.computedTypeProperty)
     SomeStructure.storedTypeProperty = "Another value.
     ```
 
