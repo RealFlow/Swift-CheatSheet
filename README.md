@@ -29,6 +29,7 @@ Notes taken from [The Swift Programming Language](https://developer.apple.com/li
 - [Protocols](#protocols)
 - [Generics](#generics)
 - [Access Control](#access-control)
+- [Advanced Operators](#advanced-operators)
 
 ## The Basics
 
@@ -2694,7 +2695,7 @@ class SomeClass {
 
 [Back to top](#swift-cheatsheet)
 
-## Error Handling
+## Error Handling (TO BE COMPLETED)
 
 [Back to top](#swift-cheatsheet)
 
@@ -4158,8 +4159,16 @@ func swapTwoValues<T>(inout a: T, inout b: T) {
   * Note
     * This rule also applies to type aliases for associated types used to satisfy protocol conformances
 
+[Back to top](#swift-cheatsheet)
+
+## Advanced Operators (TO BE COMPLETED)
+
+[Back to top](#swift-cheatsheet)
+
 ## References
 
 * [The Swift Programming Language](https://developer.apple.com/library/ios/documentation/swift/conceptual/Swift_Programming_Language/index.html#//apple_ref/doc/uid/TP40014097-CH3-XID_0)
 * [Swift - Apple Developer](https://developer.apple.com/swift/)
+
+[Back to top](#swift-cheatsheet)
 
