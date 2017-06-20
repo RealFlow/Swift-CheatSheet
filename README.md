@@ -1916,10 +1916,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     println(SomeStructure.computedTypeProperty)
     println(SomeEnumeration.storedTypeProperty)
     println(SomeEnumeration.computedTypeProperty)
-    SomeStructure.storedTypeProperty = "Another value.
+    SomeStructure.storedTypeProperty = "Another value".
     ```
-
-    * Setting type property
 
 ## Methods
 
@@ -1931,20 +1929,20 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Instance Methods
 
-```swift
-class Counter {
-    var count = 0
-    func increment() {
-        count++
-    }
-    func incrementBy(amount: Int) {
-        count += amount
-    }
-    func reset() {
-        count = 0
-    }
-}
-```
+  ```swift
+  class Counter {
+      var count = 0
+      func increment() {
+          count++
+      }
+      func incrementBy(amount: Int) {
+          count += amount
+      }
+      func reset() {
+          count = 0
+      }
+  }
+  ```
   * Local and External Parameter Names for Methods
     * Function params can have both local and external name, same wit method parameters
       * Methods are just functions associated with a type
