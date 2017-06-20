@@ -2242,19 +2242,17 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * Unlike Obj-C inits, Swift inits do not return value
   * Instance of class types can also implement a deinitializer
 
-### Setting Initial Values for Stored Properties
+### Stored Properties
 
   * Classes and structures must set all their stored properties to an init value by the time an instance is created
-  * You can store initial value of a stored property in an initialiser, or by assigning default value
+  * Stored property initial value set in initialiser or by default value
   * Note
     * When you assign the default value to a stored property, or sets the initial value within the initializers, the property is set directly without calling property observers.
   * Initializers
-
     ```swift
     init() {
       // perform some initialization here
     }
-
     struct Fahrenheit {
       var temperature: Double
 
@@ -2263,11 +2261,16 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       }
     }
     ```
+  * Stored Constant Properties
+    * Can only be modified during initialisation
+    * Can only be modified in class init, not sub-class init.
+
+  * Optional Property Types
+    * Optional property types are automatically initialised with a value of nil
 
 ### Customizing Initialization
 
-  * Initialization Parameters
-
+  * Parameter Names
     ```swift
     struct Celsius {
         var temperatureInCelsius: Double
@@ -2279,105 +2282,45 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
         }
     }
     let boilingPointOfWater = Celsius(fromFahrenheit: 212.0)
-    // boilingPointOfWater.temperatureInCelsius is 100.0
     let freezingPointOfWater = Celsius(fromKelvin: 273.15)
-    // freezingPointOfWater.temperatureInCelsius is 0.0"
     ```
 
-  * Local & External Parameter Names
-    * Initializers do not have an identifying function name, thus the names and types of an init parameters play an important role identifying which init to call.
-    * Swift provide an automatic external name to be the same with the local name
-
+  * Argument Labels
+    * Use "_" as the external name to ommit parameters
       ```swift
-      struct Color {
-
-        let red, green, blue: Double
-        init(red: Double, green: Double, blue: Double) {
-          self.red   = red
-          self.green = green
-          self.blue  = blue
-        }
-
-        init(white: Double) {
-          red   = white
-          green = white
-          blue  = white
-        }
-      }
-
-      let magenta = Color(red: 1.0, green: 0.0, blue: 1.0)
-      let halfGray = Color(white: 0.5)  // without external name will trigger an error
-      ```
-
-  * Initializer Parameters Without External Names
-
-      ```swift
-      // Use "_" as the external name
       init(_ celsius: Double) {
         temperatureInCelsius = celsius
       }
       Celcius(37.0)
       ```
 
-  * Optional Property Types
-    * Optional property types are automatically initialised with a value of nil
-
-      ```swift
-      class SurveyQuestion {
-
-          var text: String
-          var response: String?
-          init(text: String) {
-              self.text = text
-          }
-          func ask() {
-              println(text)
-          }
-      }
-
-      let cheeseQuestion = SurveyQuestion(text: "Do you like cheese?")
-      cheeseQuestion.ask()
-      cheeseQuestion.response = "Yes, I do like cheese."
-      ```
-
-  * **Modifying Constant Properties during Initialization**
-    * You can modify the value of a constant property during initialisation
-    * Can only be modified in class init, not sub-class init.
-
 ### Default Initializers
 
-  * If no init is provided, Swift provide default init, optional parameters will be set to nil, example:
-
+  * If no init is provided, Swift provide default init. Optional parameters will be set to nil
     ```swift
     class ShoppingListItem {
-      var name: String?
+      var name: String? // nil
       var quantity = 1
       var purchased = false
     }
-
-    var item = ShoppingListItem()
     ```
 
   * Memberwise Initialisers for Structure Types
     * Structure types automatically receive a member wise initialiser if there is no custom initialisers
     * Memberwise initializer is a shorthand way to initialise the member properties of new structure instances
     * Initial values can be passed to the init by name
-
       ```swift
       struct Size {
          var width = 0.0, height = 0.0
       }
-
       let twoByTwo = Size(width: 2.0, height: 2.0)
       ```
 
-### Initializer Delegation for Value Types
+### Value Types Initialization
 
-  * The rules are different for value types and class types.
-    * Value types (structures and enumerations) do not support inheritance, so their initialiser delegation process is relatively simple, they can only delegate to another initialiser, class has superclass.
+  * Value types (structures and enumerations) do not support inheritance, so they can only delegate to another initialiser
   * self.init can only be called within an initialiser
   * If custom initialiser is defined, you won't have access to the default initialiser
-
     ```swift
     struct Size {
         var width = 0.0, height = 0.0
@@ -2400,15 +2343,14 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
         }
     }
 
-    let basicRect = Rect()              // basicRect's origin is (0.0, 0.0) and its size is (0.0, 0.0)
+    let basicRect = Rect()
     let originRect = Rect(origin: Point(x: 2.0, y: 2.0),
-size: Size(width: 5.0, height: 5.0))   // originRect's origin is (2.0, 2.0) and its size is (5.0, 5.0)
     ```
 
   * Note
-    * For an alternative way to write this example without defining the init() and init(origin:size:) initializers yourself, see Extensions.
+    * Extensions would be an alternative to initializers
 
-### Class Inheritance and Initialization
+### Class Type Initialization
 
   * All of class's stored properties must be assigned to an initial value during initialisation
   * Designated Initializers & Convenience Initializers
@@ -2417,68 +2359,43 @@ size: Size(width: 5.0, height: 5.0))   // originRect's origin is (2.0, 2.0) and 
       * Quite common to have only one
     * Convenience inits, secondary support inits
   * Syntax for Designated and Convenienc initialisers
-    * init ([parameters]) { ... }
-    * convenience init([parameters]) { ... }
+    ```swift
+    init ([parameters]) { ... }
+    convenience init([parameters]) { ... }
+    ```
+
   * Init Chaining
     * Rules to simply relationship between designated & convenience inits
       1. Designated init must call a designated init from its immediate class
       2. Convenience init must call another init from the same class
       3. Convenience init must ultimately call a designated init
-    * Simple way to remember:
+    
       * Designated init delegates up
       * Convenience init delegates across
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/A662D106-1ACE-41E3-A32B-BA295C62B660.png)
-    * More complex example, designated inits act as a funnel:
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/8E788FC3-DCC0-437D-93F0-8D16CB1D2AC5.png)
-  * Two-Phase Initialization
-    * Two phases:
-      * Phase 1
-        * Each stored property is assigned an initial value
-      * Phase 2
-        * Each class is given the opportunity to customise its stored properties further before new instance is ready to use
-    * Two-phase init prevents property values being accessed before they are initialised, and prevent property values being set to a different value by another initialiser unexpectedly
-      * Similar to Obj-C, the main difference during Phase 1, Objc-C assigns zero or null values (0 or nil) to every property.
-      * Swift's init is more flexible, lets you set custom initial values, and can cope with types for which 0 or nil is not a valid default value
-    * Compiler performs four helpful safety checks:
-      * Safety Check 1
-        * A designated init must sensor that all the properties introduced by its class are initialised before it delegates up to a superclass init
-      * Safety Check 2
-        * A designated init must delegate up to a superclass init before assigning a value to an inherited property
-        * If it does't the new value the designated init assigns will be overwritten by the superclass
-      * Safety Check 3
-        * A convenience init must delegate to another init  before assigning a value to any property.
-        * If it doesn't the new value the convenience init assigns will be overwritten by its own class designated init
-      * Safety Check 4
-        * An init cannot call any instances methods, read the values of any instance properties, or refer to self as a value until the first phase of init is complete
-  * Phase 1
-    * A designated or convenience init is called
-    * Memory for a new instance of that class is allocated, the memory is not initialised yet
-    * A designated init for that class confirms that all stored properties introduced by that class have a value, the memory for those stored properties is now initialised
-    * The designated initialiser hands off to a superclass init to perform the same task for its own stored properties
-    * This continues up the class inheritance chain until top chain is reached
-    * The final class in the chain has ensured that all its stored properties have a value, instance's memory is considered fully initialised, phase 1 is complete
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/35412844-C46F-4742-B664-2BBA53595A36.png)
-  * Phase 2
-    * Working back down from the top of the chain, each designated initialiser in the chain has the option customise the instance further.
-      * Inits are now able to access self and can modify its properties, call its instance methods and so on
-    * Finally any convenience inits in the chain have the option to customise the instance to work with self.
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/2AFC7723-9E2A-4E1C-9A2D-748DC9696C45.png)
-  * Init Inheritance and Overriding
-    * **Unlike subclass in Obj-C, Swift subclass do not inherit their superclass init by default**
-    * Note
-      * Superclass inits are inherited in certain circumstances, only when it is safe and appropriate, more info in the next section
-    * If you want to the same init from the superclass, override the init with "override modifier.
-    * If you write subclass init that matches superclass convenience init, superclass convenience init can never be called directly by your subclass, as described in Init Chaining
-      * **Therefore your subclass is not providing an override of the superclass init**
-      * Thus you do not write the override modifier when providing a matching implementation of a superclass convenience initialiser
 
+      * ![](resources/twoPhaseInitialization02_2x.png)
+    
+  * Init Two-Phase
+    * Phase 1
+      * Each stored property is assigned an initial value (Objc-C assigns zero or null values)
+    * Phase 2
+      * Each class is given the opportunity to customise its stored properties further before new instance is ready to use
+    
+    * Safety checks:
+      1. A designated init must sensor that all the properties introduced by its class are initialised before it delegates up to a superclass init
+      2. A designated init must delegate up to a superclass init before assigning a value to an inherited property
+      3. A convenience init must delegate to another init before assigning a value to any property.
+      4. An init cannot:
+        * call instances methods 
+        * access instance properties
+  
+  * Init Inheritance and Overriding
+    * **Swift subclass do not inherit their superclass init by default**
+    * If any subclass initializer matches a superclass initializer, "override" modifier is required.
+    * If you write subclass init that matches superclass convenience init, superclass convenience init can never be called directly by your subclass, as described in 
       ```swift
       class Vehicle {
-
         var numberOfWheels = 0
-        var description: String {
-            return "\(numberOfWheels) wheel(s)"
-        }
       }
 
       class Bicycle: Vehicle {
@@ -2489,20 +2406,14 @@ size: Size(width: 5.0, height: 5.0))   // originRect's origin is (2.0, 2.0) and 
       }
       ```
 
-    * Note
-      * Subclasses are only allowed to modify variable superclass properties during initialisation. Subclasses cannot modify inherited constant properties.
-  * Automatic Init Inheritance
-    * Subclass do not inherit their superclass inits by default, unless certain conditions are met
-    * In practice, you do not need to write init overrides in many common scenarios, and can inherit superclass inits with minimal efforts
-    * Assuming you provide default values for any new properties you introduce in a subclass, the following two rules apply:
-      * Rule 1
-        * If your subclass **does not define any designated inits**, it automatically **inherits all its superclass initializers**
-      * Rule 2
-        * If your subclass provides an implementation of **all its superclass designated initialisers** - either by inheriting them as per rule 1 or by custom implementation, it automatically inherits all of the superclass convenience inits
-    * Note
-      * A subclass can implement a superclass designated init as subclass convenience init as part of satisfying rule 2
-  * Designated and Convenience Inits in Action
+    * Subclasses can modify inherited variable properties during initialization
+    * Subclasses cannot modify inherited constants properties during initialization
 
+  * Automatic Init Inheritance
+    * If your subclass does not define any designated inits, it automatically **inherits all its superclass initializers**
+    * If your subclass provides an implementation of all its superclass designated initialisers (either by inheriting them or by custom implementation), it automatically inherits all of the superclass convenience inits
+    * A subclass can implement a superclass designated init as subclass convenience init
+  * Designated and Convenience Example
     ```swift
     class Food {
         var name: String
@@ -2513,11 +2424,7 @@ size: Size(width: 5.0, height: 5.0))   // originRect's origin is (2.0, 2.0) and 
             self.init(name: "[Unnamed]")
         }
     }
-    ```
 
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/EAC71E1D-8420-452D-95EA-7E9073F9983A.png)
-
-    ```swift
     class RecipeIngredient: Food {
         var quantity: Int
         init(name: String, quantity: Int) {
@@ -2533,34 +2440,26 @@ size: Size(width: 5.0, height: 5.0))   // originRect's origin is (2.0, 2.0) and 
     let oneBacon = RecipeIngredient(name: "Bacon")
     let sixEggs = RecipeIngredient(name: "Eggs", quantity: 6)
     ```
+    * ![](resources/initializersExample02_2x.png)
 
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/DB577B70-0B89-42A4-AD52-8C0D314A2040.png)
-
-
-    ```swift
-    class ShoppingListItem: RecipeIngredient {
-        var purchased = false
-        var description: String {
-            var output = "\(quantity) x \(name)"
-            output += purchased ? " ✔" : " ✘"
-            return output
+  * Failable Inits
+    * A failable initializer creates an optional value of the type it initializes
+    * return nil
+      ```swift
+      struct Animal {
+        let species: String
+        init?(species: String) {
+            if species.isEmpty { return nil }
+            self.species = species
         }
-    }
-    var breakfastList = [
+      }
+      ```
+    * You can override failable init with nofailable one
+    * You cannot override nonfailable init failable one
+    * You can delegate from init? to init! and vice versa, and you can override init? with init! and vice versa. You can also delegate from init to init!, although doing so will trigger an assertion if the init! initializer causes initialization to fail.
 
-        ShoppingListItem(),
-
-        ShoppingListItem(name: "Bacon"),
-
-        ShoppingListItem(name: "Eggs", quantity: 6),
-
-    ]
-    ```
-
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/83B2D621-68B2-4016-88F3-2EAB2DC2E3B0.png)
   * Required Inits
-    * To indicate every subclass  must implement that initialiser:
-
+    * Indicates every subclass must implement that initialiser:
       ```swift
       class SomeClass {
         required init() {
@@ -2568,10 +2467,7 @@ size: Size(width: 5.0, height: 5.0))   // originRect's origin is (2.0, 2.0) and 
         }
       }
       ```
-
     * You do not write the override modifier when overriding:
-
-
       ```swift
       class SomeSubclass: SomeClass {
         required init() {
@@ -2579,45 +2475,22 @@ size: Size(width: 5.0, height: 5.0))   // originRect's origin is (2.0, 2.0) and 
         }
       }
       ```
-
     * You do not have to provide an explicit implementation if the init can be inherited.
 
-### Setting a Default Property Value with a Closure or Function
-
-
+### Init a Default Property Value with a Closure or Function
 ```swift
 class SomeClass {
     let someProperty: SomeType = {
         // create a default value for someProperty inside this closure
         // someValue must be of the same type as SomeType
         return someValue
-        }()
+        }**()**
 }
 ```
 
   * Note
     * If you use closure to init a property, remember the rest of the instance has not been initialised yet
     * You cannot access any other properties, and you cannot use "self"
-
-      ```swift
-      struct Checkerboard {
-          let boardColors: [Bool] = {
-              var temporaryBoard = [Bool]()
-              var isBlack = false
-              for i in 1...10 {
-                  for j in 1...10 {
-                      temporaryBoard.append(isBlack)
-                      isBlack = !isBlack
-                  }
-                  isBlack = !isBlack
-              }
-              return temporaryBoard
-              }()
-          func squareIsBlackAtRow(row: Int, column: Int) -> Bool {
-              return boardColors[(row * 10) + column]
-          }
-      }
-      ```
 
 [Back to top](#swift-cheatsheet)
 
