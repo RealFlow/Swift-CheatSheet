@@ -535,6 +535,7 @@ a ? b : c
     ```swift
     if (enteredDoorCode && passedRetinaScan) || hasDoorKey || knowsOverridePassword {
     ```
+[Back to top](#swift-cheatsheet)
 
 ## Strings and Characters
 
@@ -783,6 +784,7 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
     // 8252 = decimal of U+203C = double exclamation mark
     // 128054 = decimal of U+1F436 of the dog face character
     ```
+[Back to top](#swift-cheatsheet)
 
 ## Collection Types
 
@@ -943,6 +945,8 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
       * Make custom typ to conform to Hashable protocol
       * To provide hashValue and "==" operator property implementation
       * hashValue not required to be the same across different executions or in different programs
+
+[Back to top](#swift-cheatsheet)
 
 ## Control Flow
 
@@ -1166,6 +1170,7 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
     }
   ```
 
+[Back to top](#swift-cheatsheet)
 
 ## Functions
 
@@ -1307,6 +1312,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   return backwards ? stepBackward : stepForward
 }
 ```
+
+[Back to top](#swift-cheatsheet)
 
 ## Closures
 
@@ -1496,6 +1503,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     collectCustomerProviders(customersInLine.remove(at: 0))
     ```
 
+[Back to top](#swift-cheatsheet)
+
 ## Enumerations
 
 ### Overview
@@ -1626,6 +1635,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     let product = ArithmeticExpression.multiplication(sum, ArithmeticExpression.number(2))
     ``` 
 
+[Back to top](#swift-cheatsheet)
+
 ## Classes & Structures
 
 ### Overview
@@ -1721,6 +1732,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * String, Array, Set, Dictionary types are implemented as structures
   * Different from NSString, NSArray, NSSet, and NSDictionary which are implemented as classes, which are passed by reference.
   * Swift only performs actual copy behind the scenes when absolutely necessary, it manages all value copying to ensure optimal performance
+
+[Back to top](#swift-cheatsheet)
 
 ## Properties
 
@@ -1921,6 +1934,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     SomeStructure.storedTypeProperty = "Another value".
     ```
 
+[Back to top](#swift-cheatsheet)
+
 ## Methods
 
 ### Overview
@@ -2045,6 +2060,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     }
     ```
 
+[Back to top](#swift-cheatsheet)
+
 ## Subscripts
 
 ### Overview
@@ -2140,6 +2157,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     }
     ```
 
+[Back to top](#swift-cheatsheet)    
+
 ## Inheritance
 
 ### Overview
@@ -2231,6 +2250,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 ### Preventing Overrides
 
   * Mark it as "final", e.g. final var, final fund, final class fund, final subscript
+
+[Back to top](#swift-cheatsheet)
 
 ## Initialization
 
@@ -2616,6 +2637,7 @@ class SomeClass {
       }
       ```
 
+[Back to top](#swift-cheatsheet)
 
 ## Deinitialization
 
@@ -2691,6 +2713,7 @@ println("The bank now has \(Bank.coinsInBank) coins")
 // prints "The bank now has 10000 coins
 ```
 
+[Back to top](#swift-cheatsheet)
 
 ## Automatic Reference Counting
 
@@ -2953,6 +2976,8 @@ reference3 = nil
   * Weak and Unknowned References
     * If captured reference will never become nil, it should be captured as an unowned reference, rather than a weak reference
 
+[Back to top](#swift-cheatsheet)
+
 ## Optional Chaining
 
 ### Overview
@@ -3151,6 +3176,8 @@ reference3 = nil
 
     ```
 
+[Back to top](#swift-cheatsheet)
+
 ## Type Casting
 
 ### Overview
@@ -3305,6 +3332,8 @@ let library = [
     * Note
       * The case of a switch statement, use the forced version of type cast operator, as.
 
+[Back to top](#swift-cheatsheet)
+
 ## Nested Types
 
 ### Overview
@@ -3369,6 +3398,8 @@ println("theAceOfSpades: \(theAceOfSpades.description)")
   let heartsSymbol = BlackjackCard.Suit.Hearts.toRaw()
   // heartsSymbol is "♡"
 ```
+
+[Back to top](#swift-cheatsheet)
 
 ## Extensions
 
@@ -3546,6 +3577,8 @@ func printIntegerKinds(numbers: [Int]) {
 
 printIntegerKinds([3, 19, -27, 0, -6, 0, 7])  // prints "+ + - 0 - 0 +"
 ```
+
+[Back to top](#swift-cheatsheet)
 
 ## Protocols
 
@@ -4025,6 +4058,8 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     // 0
     ```
 
+[Back to top](#swift-cheatsheet)
+
 ## Generics
 
 ### Overview
@@ -4342,6 +4377,8 @@ func swapTwoValues<T>(inout a: T, inout b: T) {
         println("Not all items match.")
     }
     ```
+
+[Back to top](#swift-cheatsheet)
 
 ## Access Control
 
