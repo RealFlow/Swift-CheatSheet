@@ -2516,101 +2516,19 @@ class SomeClass {
 
 ### Overview
 
-  * To track and manage your app's memory usage
-  * Memory management just works, in a few cases ARC requires more info about the relationship between parts of your code.
-  * Reference counting only applies to classes, Structures and Enumerations are value types
-
-### How ARC Works
-
-  * To make sure that instances don't disappear when they are still needed, when you assign a class instance to a property, constant or variable, it makes a strong reference. It does not allow it to be deallocated, as long as strong reference remains.
-
-### ARC In Action
-
-```swift
-class Person {
-    let name: String
-    init(name: String) {
-        [self.name][2] = name
-        println("\(name) is being initialized")
-    }
-    deinit {
-        println("\(name) is being deinitialized")
-    }
-}
-var reference1: Person?
-var reference2: Person?
-var reference3: Person?
-
-reference1 = Person(name: "John Appleseed")
-// prints "John Appleseed is being initialised"
-
-reference2 = reference1
-reference3 = reference1
-reference1 = nil
-reference2 = nil
-reference3 = nil
-// prints "John Appleseed is being deinitialized
-```
-
-### Strong Reference Cycles Between Class Instances
-
-  * Two class instances holding a strong reference to each other
-  * You resolve strong reference cycles by defining some of the relationships between classes as weak or unowned references instead of as strong references.
-
-
-    ```swift
-    class Person {
-        let name: String
-        init(name: String) { [self.name][2] = name }
-        var apartment: Apartment?
-        deinit { println("\(name) is being deinitialized") }
-    }
-
-    class Apartment {
-        let number: Int
-        init(number: Int) { self.number = number }
-        var tenant: Person?
-        deinit { println("Apartment #\(number) is being deinitialized") }
-    }
-    var john: Person?
-    var number73: Apartment?
-    john = Person(name: "John Appleseed")
-    number73 = Apartment(number: 73)
-    ```
-
-
-  * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/598B95C0-D50B-4ECD-9CD5-126685263ACA.png)
-
-
-    ```swift
-      john!.apartment = number73
-      number73!.tenant = john
-    ```
-
-  * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/3DCF8042-9FC0-4B33-A406-E4DFEE2D7291.png)
-
-    ```swift
-      john = nil
-      number73 = nil
-      // reference count does not frop to 0
-
-    ```
-
-  * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/EC4DBFFE-F082-4689-B812-9872A63A5417.png)
+  * ARC only applies to classes, Structures and Enumerations are value types
 
 ### Resolving Strong Reference Cycles Between Class Instances
-
-  * Two ways:
-    * weak references
-      * Use weak reference whenever it is valid for the reference to become nil at some point during its lifetime
-    * unowned references
-      * When you know that the reference will never be nil once it has been set during initialization
+  
+  * Two Solutions:
+    * Weak references
+      * Use weak when the other instance has a shorter lifetime, that is when the other instance deallocates first
+    * Unowned references
+      * Use unowned when the other instance has the same or longer lifetime.
   * Weak References
-    * Enable one instance in the reference cycle to refer to the other instance without keeping a strong hold on it
-    * Use keyword "weak"
-    * Optional, constant not allowed
+    * Use "weak"
+    * Optional variable, constant not allowed
     * ARC will set to nil when it is deallocated
-
       ```swift
       class Person {
           let name: String
@@ -2618,7 +2536,6 @@ reference3 = nil
           var apartment: Apartment?
           deinit { println("\(name) is being deinitialized") }
       }
-
       class Apartment {
           let number: Int
           init(number: Int) { self.number = number }
@@ -2626,57 +2543,32 @@ reference3 = nil
           deinit { println("Apartment #\(number) is being deinitialized") }
       }
       ```
-
-      * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/EC725EFA-13D4-411A-8236-D9A53047D7EE.png)
   * Unowned References
-    * Like weak reference, but it is assumed to always have a value
-    * Non-optional type
-    * Use "unowned" keyword
+    * Use "unowned"
+    * Non-optional variable (must have a value)
     * ARC cannot set the reference to nil when it is deallocated
-    * Note
-      * If you try to access an unowned reference after the instance that it references is deallocated, will trigger a runtime error
-      * Use unowned references only when you are sure that the reference refers to an instance
+      ```swift
+      class Customer {
 
-        ```swift
-        class Customer {
-
-          let name: String
-          var card: CreditCard?
-          init(name: String) {
-              [self.name][2] = name
-          }
-          deinit { println("\(name) is being deinitialized") }
+        let name: String
+        var card: CreditCard?
+        init(name: String) {
+            [self.name][2] = name
         }
+        deinit { println("\(name) is being deinitialized") }
+      }
 
-        class CreditCard {
-          let number: UInt64
-          unowned let customer: Customer
-          init(number: UInt64, customer: Customer) {
-              self.number = number
-              self.customer = customer
-          }
-          deinit { println("Card #\(number) is being deinitialized") }
+      class CreditCard {
+        let number: UInt64
+        unowned let customer: Customer
+        init(number: UInt64, customer: Customer) {
+            self.number = number
+            self.customer = customer
         }
-        ```
-
-    * Note
-      * The number property of the CreditCard class is defined with a type of UInt64 rather than Int, to ensure that the number property's capacity is large enough to store a 16-digit card number on both 32-bit and 64-bit systems.
-
-        ```swift
-        var john: Customer?
-        john = Customer(name: "John Appleseed")
-        john!.card = CreditCard(number: 1234_5678_9012_3456, customer: john!)
-        ```
-      * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/6E29FF73-6FD5-44AC-BFF2-A44366DAD7A0.png)
-
-        ```swift
-        john = nil
-        // prints "John Appleseed is being deinitialized"
-        // prints "Card #1234567890123456 is being reinitialised"
-        ```
-
-      * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/64747DE2-441C-43EF-99E2-12B37CEA1E8D.png)
-  * **Unowned References and Implicitly Unwrapped Optional Properties**
+        deinit { println("Card #\(number) is being deinitialized") }
+      }
+      ```
+  * Unowned References and Implicitly Unwrapped Optional Properties
     * Third scenario which both properties should have a value
     * Combine unowned property on one class with an implicit unwrapped optional property on the other class
     * Enables both properties to be accessed directly without optional unwrapping once init is complete, while avoiding reference cycle
@@ -2708,70 +2600,25 @@ reference3 = nil
 
 ### Strong Reference Cycles for Closures
 
-  * Can occur if you assign a closure to a property of a class instance, and the body of that closure captures that instance, such as
-    * self.someProperty or
-    * self.someMethod()
-    * Captures self creating a strong reference cycle
-  * Closure are reference types, when you assign to a property, you are assigning a reference to that closure
-    * Class instance and a closure keeping each other alive
+  * Can occur captures self creating a strong reference cycle
   * Solution to use a "closure capture list"
-
-    ```swift
-    class HTMLElement {
-        let name: String
-        let text: String?
-
-        lazy var asHTML: () -> String = {
-            if let text = self.text {
-                return "<\(self.name)>\(text)</\(self.name)>"
-            } else {
-                return "<\(self.name) />"
-            }
-        }
-
-        init(name: String, text: String? = nil) {
-            [self.name][2] = name
-            self.text = text
-        }
-
-        deinit {
-            println("\(name) is being deinitialized")
-        }
-
-    }
-    var paragraph: HTMLElement? = HTMLElement(name: "p", text: "hello, world")
-    println(paragraph!.asHTML())
-    // prints "<p>hello, world</p>
-    ```
-
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/92D56D5E-0877-48C0-8873-816A21C3CCCC.png)
-
-### Resolving Strong Reference Cycles for Closures
-
-  * Define a capture list as part of the closure's definition
-  * Capture list defines the rules to use when capturing one or more reference types within the closure's body
-  * You can declare captured reference to be a weak or unknown reference
-  * Note
-    * Write self.someProperty or self.someMethod, instead of removing the self to help you remember that it's possible to capture self by accident
-  * Defining Capture List
-
+  * Declare captured reference to be a weak or unknown reference
     ```swift
     lazy var someClosure: (Int, String) -> String = {
-        [unowned self] (index: Int, stringToProcess: String) -> String in
+      [unowned self, weak delegate = self.delegate!] (index: Int, stringToProcess: String) -> String in
+      // closure body goes here
+    }
+    ```
+    * Or
+    ```swift
+    lazy var someClosure: () -> String = {
+        [unowned self, weak delegate = self.delegate!] in
         // closure body goes here
     }
     ```
-      * Or
 
-      ```swift
-      lazy var someClosure: () -> String = {
-        [unowned self] in
-        // closure body goes here
-      }
-      ```
-
-  * Weak and Unknowned References
-    * If captured reference will never become nil, it should be captured as an unowned reference, rather than a weak reference
+  * Unowned reference when the closure and the instance it captures will always refer to each other, and will always be deallocated at the same time.
+  * Weak reference when the the instance it captures may become nil at some point in the future. This enables you to check for their existence within the closure’s body.
 
 [Back to top](#swift-cheatsheet)
 
