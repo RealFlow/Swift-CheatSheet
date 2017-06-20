@@ -1924,18 +1924,17 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 ### Overview
 
   * Functions associated with a particular type
-  * Classes, structures and enumerations can define instance and type methods.
+  * Classes, structures and enumerations can define instance and type methods (~class methods).
   * Major difference from C and Obj-C. In Obj-C, only classes can define methods.
 
 ### Instance Methods
-
   ```swift
   class Counter {
       var count = 0
       func increment() {
           count++
       }
-      func incrementBy(amount: Int) {
+      func increment(by amount: Int) {
           count += amount
       }
       func reset() {
@@ -1943,72 +1942,35 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       }
   }
   ```
-  * Local and External Parameter Names for Methods
-    * Function params can have both local and external name, same wit method parameters
-      * Methods are just functions associated with a type
-      * But the default behaviour is different for functions and methods
-    * Methods in Swift similar to Obj-C, name of a method refers to the method's first parameter using a preposition such as "width", "for", "by", e.g. incrementBy(amount:, numberOfTimes). Easy to read as a sentence
-    * Swift makes this naming convention easy to write by using a different default approach for method parameters than it uses for functions
-      * It gives the **first parameter** name in a method a **local parameter name** by default
-      * And gives the **second and subsequent parameter names** both **local and external parameter** names by default
 
-        ```swift
-          class Counter {
-            var count: Int = 0
-            func incrementBy(amount: Int, numberOfTimes: Int) {
-              count += amount * numberOfTimes
-            }
-          }
-        ```
-
-      * You can call the method as follows:
-
-        ```swift
-        let counter = Counter()
-        counter.incrementBy(5, numberOftimes: 3)
-        ```
-
-      * Default behaviour as if
-
-        ```swift
-        func incrementBy(amount: Int, #numberOfTimes: Int) {
-          count += amount * numberOfTimes
-        }
-        ```
-  * Modifying External Parameter Name Behaviour for Methods
-    * Use # or add external parameter name for the first param
-    * To disable second param onwards, add _
   * The self Property
     * self refers to current instance
-    * You don't usually need to declare
-    * Unless when a parameter name has the same name as the property of that instance
-  * Modifying Value Types from Within Instance Methods
-    * Structures and enumeration are value types, which properties of a value type cannot be modified from within its instance methods.
-    * You can opt-in to mutating behaviour for that method, the method can also assign a completely new instance to its implicit self property
-    * Use "mutating" keyword before the "func" for the method:
+    * self disambiguates between method parameter and same named instance properties (setter collision)
 
+  * Modifying Value Types from Within Instance Methods
+    * Structures and enumeration are value types. By Default properties of a value type cannot be modified from within its instance methods.
+    * Mutating method modifies the instance properties and can even assign a completely new instance to self.
+    * Use "mutating" keyword before the "func" for the method:
       ```swift
       struct Point {
         var x = 0.0, y = 0.0
-        mutating func moveByX(deltaX: Double, y deltaY: Double) {
+        mutating func moveBy(x deltaX: Double, y deltaY: Double) {
           x += deltaX
           y += deltaY
         }
       }
 
       var somePoint = Point(x: 1.0, y: 1.0)
-      somePoint.moveByX(2.0, y: 3.0)
+      somePoint.moveBy(x: 2.0, y: 3.0)
       ```
 
-    * Note that you cannot call a mutating method on a constant structure
-
+    * Note that you cannot call a mutating method on constants
       ```swift
       let fixedPoint = Point(x: 3.0, y: 3.0)
-      fixedPoint.moveByX(2.0, y: 3.0) // this will report an error
+      fixedPoint.moveBy(x: 2.0, y: 3.0) // this will report an error
       ```
 
-  * Assigning to self Within a Mutating Method
-
+  * Assigning to Self Within a Mutating Method
       ```swift
       struct Point {
         var x = 0.0, y = 0.0
@@ -2022,7 +1984,6 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
       ```swift
       enum TriStateSwitch {
-
         case Off, Low, High
         mutating func next() {
             switch self {
@@ -2036,16 +1997,17 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
         }
       }
       var ovenLight = TriStateSwitch.Low
-      ovenLight.next()
-      // ovenLight is now equal to .High
-      ovenLight.next()
-      // ovenLight is now equal to .Off"
+      ovenLight.next() // ovenLight is now equal to .High
+      ovenLight.next() // ovenLight is now equal to .Off"
       ```
 
 ### Type Methods
 
-  * You indicate type methods for classes by writing the keyword "class" before the method's fund keyword, and type methods for structures and enumerations by writing the keyword "static" before the method's fund keyword
-  * In Obj-C type methods only for classes, in Swift for all classes, structures, and enumerations.
+  * Syntax:
+    * Classes: write keyword "class"
+    * Structures and Enumerations: write keyword "static"
+    * Self refers to type itself
+    * Accessing type methods from the same scope, doesn't require a self:
 
     ```swift
     class SomeClass {
@@ -2056,31 +2018,28 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
     SomeClass.someTypeMethod()
     ```
-
-  * self refers to type itself
-  * Accessing type methods from the same scope, doesn't require a self:
-
     ```swift
     struct LevelTracker {
-        static var highestUnlockedLevel = 1
-
-        static func unlockLevel(level: Int) {
-            if level > highestUnlockedLevel { highestUnlockedLevel = level }
-        }
-
-        static func levelIsUnlocked(level: Int) -> Bool {
-            return level <= highestUnlockedLevel
-        }
-
-        var currentLevel = 1
-        mutating func advanceToLevel(level: Int) -> Bool {
-            if LevelTracker.levelIsUnlocked(level) {
-                currentLevel = level
-                return true
-            } else {
-                return false
-            }
-        }
+      static var highestUnlockedLevel = 1
+      var currentLevel = 1
+      
+      static func unlock(_ level: Int) {
+          if level > highestUnlockedLevel { highestUnlockedLevel = level }
+      }
+      
+      static func isUnlocked(_ level: Int) -> Bool {
+          return level <= highestUnlockedLevel
+      }
+      
+      @discardableResult // ignore return value
+      mutating func advance(to level: Int) -> Bool {
+          if LevelTracker.isUnlocked(level) {
+              currentLevel = level
+              return true
+          } else {
+              return false
+          }
+      }
     }
     ```
 
