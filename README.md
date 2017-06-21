@@ -2713,6 +2713,7 @@ class SomeClass {
 ### Handling Errors
 There are four ways to handle errors
   1. Propagate the Error using throwing
+  
     ```swift
     // throws error 
     func vend(itemNamed name: String) throws {
@@ -2758,7 +2759,7 @@ There are four ways to handle errors
         y = nil
     }
     ```
-    
+
   4. Disabling Error Propagation
     * Use "try!" if you are sure there will be no error (runtime error otherwise).
 
