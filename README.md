@@ -2695,7 +2695,88 @@ class SomeClass {
 
 [Back to top](#swift-cheatsheet)
 
-## Error Handling (TO BE COMPLETED)
+## Error Handling
+
+### Representing and Throwing Errors
+  * Swift enumerations are particularly well suited to modeling a group of related error
+    ```swift
+    enum VendingMachineError: Error {
+      case invalidSelection
+      case insufficientFunds(coinsNeeded: Int)
+      case outOfStock
+    }
+    ```
+  * Throwing
+    ```swift
+    throw VendingMachineError.insufficientFunds(coinsNeeded: 5)
+    ```
+### Handling Errors
+There are four ways to handle errors
+  1. Propagate the Error using throwing
+     ```swift
+    // throws error 
+    func vend(itemNamed name: String) throws {
+        guard let item = inventory[name] else {
+            throw VendingMachineError.invalidSelection
+        }
+        
+        // rest of code
+    }
+
+    // propagates the error coming from other function
+    func buyFavoriteSnack(person: String, vendingMachine: VendingMachine) throws {
+      try vendingMachine.vend(itemNamed: "snackName") // error propagation
+    }
+    ```
+  2. Do-Catch
+    ```swift
+    do {
+        try buyFavoriteSnack(person: "Alice", vendingMachine: vendingMachine)
+    } catch VendingMachineError.invalidSelection {
+        print("Invalid Selection.")
+    } catch VendingMachineError.outOfStock {
+        print("Out of Stock.")
+    } catch VendingMachineError.insufficientFunds(let coinsNeeded) {
+        print("Insufficient funds. Please insert an additional \(coinsNeeded) coins.")
+    }
+    ```
+  3. Converting Errors to Optionals
+    * use "try?" to convert an Error to an Optional value. If an Error is thrown, the value of the expression is nil.
+    ```swift
+    func someThrowingFunction() throws -> Int {
+      // ...
+    }
+ 
+    let x = try? someThrowingFunction()
+ 
+    let y: Int?
+    do {
+        y = try someThrowingFunction()
+    } catch {
+        y = nil
+    }
+    ```
+  4. Disabling Error Propagation
+    * Use "try!" if you are sure there will be no error (runtime error otherwise).
+
+### Defer
+  * Defer executes just before leaving the current block.
+  * Useful for cleaning up
+  * Cannot containt break, return or throw an error
+  ```swift
+  func processFile(filename: String) throws {
+    if exists(filename) {
+        let file = open(filename)
+        defer {
+            close(file)
+        }
+        while let line = try file.readline() {
+            // Work with the file.
+        }
+        // close(file) is called here, at the end of the scope.
+    }
+  }
+  ```
 
 [Back to top](#swift-cheatsheet)
 
