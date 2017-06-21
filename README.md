@@ -2713,7 +2713,7 @@ class SomeClass {
 ### Handling Errors
 There are four ways to handle errors
   1. Propagate the Error using throwing
-     ```swift
+    ```swift
     // throws error 
     func vend(itemNamed name: String) throws {
         guard let item = inventory[name] else {
@@ -2728,6 +2728,7 @@ There are four ways to handle errors
       try vendingMachine.vend(itemNamed: "snackName") // error propagation
     }
     ```
+
   2. Do-Catch
     ```swift
     do {
@@ -2740,6 +2741,7 @@ There are four ways to handle errors
         print("Insufficient funds. Please insert an additional \(coinsNeeded) coins.")
     }
     ```
+
   3. Converting Errors to Optionals
     * use "try?" to convert an Error to an Optional value. If an Error is thrown, the value of the expression is nil.
     ```swift
@@ -2756,6 +2758,7 @@ There are four ways to handle errors
         y = nil
     }
     ```
+    
   4. Disabling Error Propagation
     * Use "try!" if you are sure there will be no error (runtime error otherwise).
 
@@ -3413,7 +3416,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   ```
 
 ### Generic Subscripts
-  ``swift
+  ```swift
   extension Container {
       subscript<Indices: Sequence>(indices: Indices) -> [Item]
           where Indices.Iterator.Element == Int {
