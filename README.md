@@ -3238,132 +3238,36 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   * Enables you to write flexible, reusable functions and types that can work with any type, subject to requirements that you define.
   * Avoid duplication and expresses its intent in a clear, abstracted manner
   * Most powerful feature of Swift, much of the Swift standard library is built with generic code.
-  * You have been using generics throughoutLanguage Guide
-    * Swift's Array and Dictionary types are both generic collections
-    * You can create an array of any types
-
-### The Problem That Generic Solve
-
-  * Fixed Type Example
-
-    ```swift
-    func swapTwoInts(inout a: Int, inout b: Int) {
-        let temporaryA = a
-        a = b
-        b = temporaryA
-    }
-
-    var someInt = 3
-    var anotherInt = 107
-
-    swapTwoInts(&someInt, &anotherInt)
-    println("someInt is now \(someInt), and anotherInt is now \(anotherInt)")
-    // prints "someInt is now 107, and anotherInt is now 3
-
-    func swapTwoStrings(inout a: String, inout b: String) {
-        let temporaryA = a
-        a = b
-        b = temporaryA
-    }
-
-    func swapTwoDoubles(inout a: Double, inout b: Double) {
-        let temporaryA = a
-        a = b
-        b = temporaryA
-    }
-    ```
-
-  * In all 3 functions, it is important that the types a and b are defined to be the same as each other.
-
+ 
 ### Generic Functions
 
-```swift
-func swapTwoValues<T>(inout a: T, inout b: T) {
-    let temporaryA = a
-    a = b
-    b = temporaryA
-}
-```
+  ```swift
+  func swapTwoValues<T>(inout a: T, inout b: T) {
+      let temporaryA = a
+      a = b
+      b = temporaryA
+  }
 
-  * Comparison
+  var someInt = 3
+  var anotherInt = 107
+  swapTwoValues(&someInt, &anotherInt)
 
-    ```swift
-    func swapTwoInts(inout a: Int, inout b: Int)
-    func swapTwoValues<T>(inout a: T, inout b: T)
-
-    var someInt = 3
-    var anotherInt = 107
-    swapTwoValues(&someInt, &anotherInt)
-    // someInt is now 107, and anotherInt is now 3
-
-    var someString = "hello"
-    var anotherString = "world"
-    swapTwoValues(&someString, &anotherString)
-    // someString is now "world", and anotherString is now "hello"
-    ```
-
-    * Note
-      * swapTwoValues inspired by generic function called swap, which is part of Swift standard library, is automatically made available for you to use in your apps
+  var someString = "hello"
+  var anotherString = "world"
+  swapTwoValues(&someString, &anotherString)
+  ```
 
 ### Type Parameters
 
   * In the swapTwoValues, the placeholder T is an example of a type parameter.
-    * Type parameter specify and name a placeholder type, and are written immediately after the function's name, between a pair of matching angle bracket (such as <T>)
     * Once you specify the type parameter, you can use it to define the type of a function's parameter, function's return type and or as a type annotation within the body of the function
     * You can provide more than one type parameter by writing type parameter name within the angle bracket.
   * Naming Type Parameters
-    * Traditional to use single-character name T
-    * But, you can use any valid identifier for the type parameter name
-    * Complex generic functions, or generic types with multiple parameters, useful to provide more descriptive parameter names.
-    * Example:
-      * Dictionary uses KeyType and ValueType
-    * Note
-      * Always give type parameters UpperCamelCase to indicate they are placeholder for a type not a value
-
-### Generic Types
-
+    * Traditional to use single-character name T, but you can use any valid identifier for the type parameter name with Capital letter
+    * Allowed generic types with multiple parameters (Dictionary uses KeyType and ValueType)
   * Custom classes, structures, and enumerations that can work with any type, similar to Array and Dictionary
-  * Example, create a Stack
-    * The concept of stack is used by UINavigationController.
-    * Call pushViewController:animated and popViewControllerAnimated:
-    * Last in, first out
-    * ![](iOS%3A%20Swift%20Programming%20(iBook).resources/CC626F62-D041-4B0F-8F78-4DEA2FD8B5D9.png)
-  * Integer Stack:
 
-    ```swift
-    struct InStack {
-        var items = [Int]()
-        mutating func push(item: Int) {
-            items.append(item)
-        }
-
-        mutating func pop() -> Int {
-            return items.removeLast()
-        }
-    }
-    ```
-
-  * Generic Stack:
-
-    ```swift
-    struct Stack<T> {
-        var items = [T]()
-
-        mutating func push(item: T) {
-            items.append(item)
-        }
-
-        mutating func pop() -> T {
-            return items.removeLast()
-        }
-    }
-
-    var stackOfStrings = Stack<String>()
-    stackOfStrings.push("uno")
-    stackOfStrings.push("dos")
-    stackOfStrings.push("tres")
-    ```
-
+  
 ### Extending a Generic Type
 
   * When you extend a generic type, you do not provide a type parameter list as part of the extension's definition.
@@ -3371,7 +3275,7 @@ func swapTwoValues<T>(inout a: T, inout b: T) {
   * The original type parameter names are used to refer to the type parameters of the original definition
 
     ```swift
-    extension Stack {
+    extension Stack { // Stack is an structure
         var topItem: T? {
             return items.isEmpty ? nil: items[items.count - 1]
         }
@@ -3383,15 +3287,13 @@ func swapTwoValues<T>(inout a: T, inout b: T) {
   * Overview
     * To enforce certain type constraints on the types that can be used with generic functions and generic types
     * Type constraints specify a type parameter must inherit from a specific class or conform to a protocol composition
-    * Dictionary places a limitation on the types that can be used as keys for a dictionary
-    * Keys must be hashable, conform to the Hashable protocol
+      * Dictionary Keys must be hashable, conform to the Hashable protocol
+    
   * Type Constraint Syntax
 
     ```swift
-    extension Stack {
-        var topItem: T? {
-            return items.isEmpty ? nil: items[items.count - 1]
-        }
+    func someFunction<T: SomeClass, U: SomeProtocol>(someT: T, someU: U) {
+        // function body goes here
     }
     ```
 
@@ -3408,13 +3310,6 @@ func swapTwoValues<T>(inout a: T, inout b: T) {
         return nil
       }
 
-      let strings = ["cat", "dog", "llama", "parakeet", "terrapin"]
-
-      if let foundIndex = findStringIndex(strings, "llama") {
-        println("Found index: \(foundIndex)")
-      }
-      ```
-
       * Generic version
 
         ```swift
@@ -3424,12 +3319,8 @@ func swapTwoValues<T>(inout a: T, inout b: T) {
                   return index
               }
           }
-
           return nil
         }
-
-        let doubleIndex = findIndex([3.14, 0.1, 0.25], 9.3)
-        let stringIndex = findIndex(["Mike", "John", "Andrea"], "John")
         ```
 
 ### Associated Types
@@ -3438,8 +3329,6 @@ func swapTwoValues<T>(inout a: T, inout b: T) {
     * When defining a protocol, sometimes, it is useful to declare one or more associated types as part of the protocol's definition.
     * Gives a placeholder name (alias) to a type that is used as part of the protocol
     * Actual type to use for the associated type is not specified until the protocol is adopted
-  * Associated Types in Action
-
     ```swift
     protocol Container {
       typealias ItemType
@@ -3448,106 +3337,96 @@ func swapTwoValues<T>(inout a: T, inout b: T) {
       var count: Int { get }
       subscript(i: Int) -> ItemType { get }
     }
+
+    struct IntStack: Container {
+        // original IntStack implementation
+        var items = [Int]()
+        mutating func push(item: Int) {
+            items.append(item)
+        }
+
+        mutating func pop() -> Int {
+            return items.removeLast()
+        }
+
+        // conformance to the Container protocol
+        typealias ItemType = Int
+        mutating func append(item: Int) {
+            self.push(item)
+        }
+
+        var count: Int {
+            return items.count
+        }
+
+        subscript(i: Int) -> Int {
+            return items[i]
+        }
+    }
     ```
+### Using Type Annotations to Constrain an Associated Type
 
-    * Int Stack Implementation
+  * Add a type annotation to an associated type in a protocol, to require that conforming types satisfy the constraints described by the type annotation.
 
-      ```swift
-      struct IntStack: Container {
-          // original IntStack implementation
-          var items = [Int]()
-          mutating func push(item: Int) {
-              items.append(item)
-          }
-
-          mutating func pop() -> Int {
-              return items.removeLast()
-          }
-
-          // conformance to the Container protocol
-          typealias ItemType = Int
-          mutating func append(item: Int) {
-              self.push(item)
-          }
-
-          var count: Int {
-              return items.count
-          }
-
-          subscript(i: Int) -> Int {
-              return items[i]
-          }
-      }
-      ```
-
-    * Generic Type Implementation, Swift is able to infer that T refers to ItemAlias in the protocol:
-
-      ```swift
-      struct Stack<T>: Container {
-          var items = [T]()
-
-          mutating func push(item: T) {
-              items.append(item)
-          }
-
-          mutating func pop() -> T {
-              return items.removeLast()
-          }
-
-          // conformance to Container protocol
-          mutating func append(item: T) {
-              self.push(item)
-          }
-
-          var count: Int {
-              return items.count
-          }
-
-          subscript(i: Int) -> T {
-              return items[i]
-          }
-      }
-      ```
+  ```swift
+  protocol Container {
+      associatedtype Item: Equatable
+      mutating func append(_ item: Item)
+      var count: Int { get }
+      subscript(i: Int) -> Item { get }
+  }
+  ```
 
 ### Where Clause
 
   * Define requirements on the type parameters associated with a generic function or type
   * Define where clauses as part of a type parameter list
   * Where clause allows you to require that an associated type conforms to a certain protocol **and/or** certain taupe parameters an associated types to be the same
-
     ```swift
     func allItemsMatch<C1: Container, C2: Container where C1.ItemType == C2.ItemType, C1.ItemType: Equatable> (someContainer: C1, anotherContainer: C2) -> Bool {
-        if someContainer.count != anotherContainer.count {
-            return false
-        }
-
-        for i in 0..<someContainer.count {
-            if someContainer[i] != anotherContainer[i] {
-                return false
-            }
-        }
-
-        return true
-    }
-
-    var stackOfStrings = Stack<String>()
-    stackOfStrings.push("1")
-    stackOfStrings.push("2")
-    stackOfStrings.push("3")
-
-    //var arrayOfStrings = ["1", "2", "3"]
-    // Error cause array of String does not conform to Container protocol
-    var arrayOfStrings = Stack<String>()
-    arrayOfStrings.push("1")
-    arrayOfStrings.push("2")
-    arrayOfStrings.push("3")
-
-    if allItemsMatch(stackOfStrings, arrayOfStrings) {
-        println("All items match.")
-    } else {
-        println("Not all items match.")
+        // ...
     }
     ```
+
+### Where Clause Extensions
+  ```swift
+  extension Stack where Element: Equatable {
+      // ...
+  }
+
+  struct NotEquatable { }
+  var notEquatableStack = Stack<NotEquatable>()
+  let notEquatableValue = NotEquatable()
+  notEquatableStack.push(notEquatableValue)
+  notEquatableStack.isTop(notEquatableValue)  // Error
+  ```
+
+### Where Clause in Associated Types
+  ```swift
+  protocol Container {
+      associatedtype Item
+      mutating func append(_ item: Item)
+      var count: Int { get }
+      subscript(i: Int) -> Item { get }
+      
+      associatedtype Iterator: IteratorProtocol where Iterator.Element == Item
+      func makeIterator() -> Iterator
+  }
+  ```
+
+### Generic Subscripts
+  ´´´swift
+  extension Container {
+      subscript<Indices: Sequence>(indices: Indices) -> [Item]
+          where Indices.Iterator.Element == Int {
+              var result = [Item]()
+              for index in indices {
+                  result.append(self[index])
+              }
+              return result
+      }
+  }
+  ```
 
 [Back to top](#swift-cheatsheet)
 
