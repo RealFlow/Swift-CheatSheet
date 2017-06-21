@@ -2846,67 +2846,37 @@ There are four ways to handle errors
 ## Nested Types
 
 ### Overview
-
-  * Enums often created to support a specific class or structure's functionality
+  * Available in Classes, Structures and Enums
   * It can be convenient to define utility classes and structures purely for use within the context of a more complex type
-  * Define nested types:
-    * Nest supporting enumerations, classes, structures within the definition of the type they support
-
-### Nested Types in Action
-
-```swift
-struct BlackjackCard {
-    // nested Suit enumeration
-    enum Suit: Character {
-        case Spades = "♠", Hearts = "♡", Diamonds = "♢", Clubs = "♣"
-    }
-
-    // nested Rank enumeration
-    enum Rank: Int {
-        case Two = 2, Three, Four, Five, Six, Seven, Eight, Nine, Ten
-        case Jack, Queen, King, Ace
-
-        struct Values {
-            let first: Int, second: Int?
+    ```swift
+    struct BlackjackCard {
+        // nested Suit enumeration
+        enum Suit: Character {
+            case Spades = "♠", Hearts = "♡", Diamonds = "♢", Clubs = "♣"
         }
 
-        var values: Values {
-            switch self {
-              case .Ace:
-                  return Values(first: 1, second: 11)
-              case .Jack, .Queen, .King:
-                  return Values(first: 10, second: nil)
-              default:
-                  return Values(first: self.toRaw(), second: nil)
+        // nested Rank enumeration
+        enum Rank: Int {
+            case Two = 2, Three, Four, Five, Six, Seven, Eight, Nine, Ten
+            case Jack, Queen, King, Ace
+            // nested struct
+            struct Values {
+                let first: Int, second: Int?
+            }
+
+            var values: Values {
+                switch self {
+                  case .Ace:
+                      return Values(first: 1, second: 11)
+                  case .Jack, .Queen, .King:
+                      return Values(first: 10, second: nil)
+                  default:
+                      return Values(first: self.toRaw(), second: nil)
+                }
             }
         }
     }
-
-    // BlackjackCard properties and methods
-    let rank: Rank, suit: Suit
-    var description: String {
-        var output = "suit is \(suit.toRaw()),"
-        output += " value is \(rank.values.first)"
-
-        if let second = rank.values.second {
-            output += " or \(second)"
-        }
-
-        return output
-    }
-}
-
-let theAceOfSpades = BlackjackCard(rank: .Ace, suit: .Spades)
-println("theAceOfSpades: \(theAceOfSpades.description)")
-// prints "theAceOfSpades: suit is ♠, value is 1 or 11
-```
-
-### Referring to Nested Types
-
-```swift
-  let heartsSymbol = BlackjackCard.Suit.Hearts.toRaw()
-  // heartsSymbol is "♡"
-```
+    ```
 
 [Back to top](#swift-cheatsheet)
 
