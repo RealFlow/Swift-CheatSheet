@@ -3692,7 +3692,8 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
 [Back to top](#swift-cheatsheet)
 
-## Advanced Operators (TO BE COMPLETED)
+## Advanced Operators
+(TO BE COMPLETED)
 
 [Back to top](#swift-cheatsheet)
 
