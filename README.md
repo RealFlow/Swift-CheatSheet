@@ -3415,7 +3415,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   ```
 
 ### Generic Subscripts
-  ´´´swift
+  ```swift
   extension Container {
       subscript<Indices: Sequence>(indices: Indices) -> [Item]
           where Indices.Iterator.Element == Int {
