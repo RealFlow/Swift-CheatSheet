@@ -3210,10 +3210,10 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 ### Protocol Extensions
     * Protocols can be extended to provide method and property implementations to conforming types
     * Protocols can provide default implementations of a required method or property
+
     ```swift
     extension RandomNumberGenerator {
         var randomVariable: Bool { return randomBool() } // var inherited by other protocol
-
         func randomBool() -> Bool {
           return random() > 0.5
         }
