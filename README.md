@@ -3208,8 +3208,8 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     ```
 
 ### Protocol Extensions
-    * Protocols can be extended to provide method and property implementations to conforming types
-    * Protocols can provide default implementations of a required method or property
+  * Protocols can be extended to provide method and property implementations to conforming types
+  * Protocols can provide default implementations of a required method or property
 
     ```swift
     extension RandomNumberGenerator {
@@ -3221,7 +3221,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     ```
 
 ### Protocol Constraints
-    * Use "where" keyword
+  * Use "where" keyword
     ```swift
     extension Collection where Iterator.Element: TextRepresentable {
         var textualDescription: String {
