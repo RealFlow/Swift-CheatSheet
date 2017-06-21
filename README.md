@@ -2712,7 +2712,7 @@ class SomeClass {
     ```
 ### Handling Errors
 There are four ways to handle errors
-  * Propagate the Error using throwing
+  * 1. Propagate the Error using throwing
 
     ```swift
     // throws error 
@@ -2730,7 +2730,7 @@ There are four ways to handle errors
     }
     ```
 
-  2. Do-Catch
+  * 2. Do-Catch
     ```swift
     do {
         try buyFavoriteSnack(person: "Alice", vendingMachine: vendingMachine)
@@ -2743,7 +2743,7 @@ There are four ways to handle errors
     }
     ```
 
-  3. Converting Errors to Optionals
+  * 3. Converting Errors to Optionals
     * use "try?" to convert an Error to an Optional value. If an Error is thrown, the value of the expression is nil.
     ```swift
     func someThrowingFunction() throws -> Int {
@@ -2760,7 +2760,7 @@ There are four ways to handle errors
     }
     ```
 
-  4. Disabling Error Propagation
+  * 4. Disabling Error Propagation
     * Use "try!" if you are sure there will be no error (runtime error otherwise).
 
 ### Defer
