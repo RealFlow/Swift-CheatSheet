@@ -2917,23 +2917,22 @@ extension SomeType: SomeProtocol, AnotherProtocol {
 
 ### Overiew
 
-  * Defines a blueprint of methods, properties, and other quirements to suit a particular task or piece of functionality.
   * Does not provide an implementation, only describes what an implementation will look like
   * Can be adopted by a class, structure or enumeration
-  * Any type that satisfies the requirements conform to that protocol
+  * Any type that satisfies the requirements conforms to that protocol
 
 ### Protocol Syntax
 
 ```swift
 protocol SomeProtocol {
-  // protocol definition goes here
+
 }
 
 struct SomeStructure: FirstProtocol, AnotherProtocol {
-  // structure definition goes here
+
 }
 class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
-  // class definition goes here
+
 }
 ```
 
@@ -2943,126 +2942,44 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
     ```swift
     protocol SomeProtocol {
-      var mustBeSettable: Int { get set }
-      var doesNotNeedToBeSettable: Int { get }
+      var mustBeSettable: Int { get set }       // may be stored or computed
+      var doesNotNeedToBeSettable: Int { get }  // may be stored or computed
     }
     ```
 
-  * Type property protocol, use "static" keyword for structure or enumeration
+  * Type property protocol. Use "static" keyword
 
     ```swift
     protocol AnotherProtocol {
-      class var someTypeProperty: Int { get set }
+      static var someTypeProperty: Int { get set }
     }
     ```
-
-  * Protocol with a single instance property requirements:
-
-    ```swift
-    protocol FullyNamed {
-        var fullName: String { get }
-    }
-    ```
-
-    * Simple structure conforms to FullyNamed protocol
-
-      ```swift
-      struct Person: FullyNamed {
-
-        var fullName: String
-      }
-      let john = Person(fullName: "John Appleseed")
-      // john.fullName is "John Appleseed"
-      ```
-
-    * Class conforms to the protocol:
-
-      ```swift
-      class Starship: FullyNamed {
-
-        var prefix: String?
-        var name: String
-        init(name: String, prefix: String? = nil) {
-            [self.name][2] = name
-            self.prefix = prefix
-        }
-        var fullName: String {
-            return (prefix != nil ? prefix! + " " : "") + name
-        }
-      }
-      var ncc1701 = Starship(name: "Enterprise", prefix: "USS")
-      // ncc1701.fullName is "USS Enterprise"
-      ```
 
 ### Method Requirements
 
-  * Protocol can require specific instance methods or type methods to be implemented
-  * Use the same syntax as normal methods, but are not allowed to specify default values for method params.
-
+  * Allowed Variadic parameters
+  * Not allowed Default values
+  * If you mark a protocol instance method requirements as mutating, you do not need to write the mutating keyword when writing an implementation of that method for a class. Mutating only used by structures and enumerations
     ```swift
     protocol SomeProtocol {
-        class func someTypeMethod()
-    }
-    protocol RandomNumberGenerator {
-
         func random() -> Double
-
+        static func someTypeMethod()
+        mutating func someMutatingMethod()
     }
-    ```
-
-### Mutating Method Requirements
-
-  * If you mark a protocol instance method requirements as mutating, you do not need to write he mutating keyword when writing an implementation of that method for a class
-  * Mutating only used by structures and enumerations
-
-    ```swift
-    protocol Togglable {
-        mutating func toggle()
-    }
-
-    enum OnOffSwitch: Togglable {
-        case Off, On
-        mutating func toggle() {
-            switch self {
-            case Off:
-                self = On
-            case On:
-                self = Off
-            }
-        }
-    }
-
-    var lightSwitch = OnOffSwitch.Off
-    lightSwitch.toggle()  // lightSwitch is now equal to .On
     ```
 
 ### Initializer Requirements
-
-  * Same way as normal inits, but without curly braces or an init body:
-
-    ```swift
-    protocol SomeProtocol {
-      init(someParameter: Int)
-    }
-    ```
-
   * Class implementations of Protocol initialisers requirements
-    * You can implement a protocol initialiser requirement on a conforming class as either a designated initialiser requirement  or a convenience initializer.
-    * In both cases you must mark the initialiser implementation with the "required" modifier:
-
+    * Use "required" modifier for both designated and convenience inits:
       ```swift
       class SomeClass: SomeProtocol {
-
         required init(someParameter: Int) {
           // initializer implementation goes here
         }
       }
       ```
 
-    * Required modifier ensures that you provide explicit or inherited implementation of the initialiser requirement on all subclasses.
-    * Note
-      * You do not need to mark protocol init with required modifier on classes marked with the final modifier, because final classes can not be subclassed.
-  * Subclass implementation, note the override:
+  * Subclass implementation (note the override):
 
     ```swift
     protocol SomeProtocol {
@@ -3088,32 +3005,20 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   * Protocol you create will become a fully-fledged type for use in your code
   * Thus, you can use protocol in many places, including:
     * As a parameter type or return type in a function, method or init
-    * As a  type of a constant, variable or property
+    * As a type of a constant, variable or property
     * As a type of items in an array, dictionary or other container
 
     ```swift
     class Dice {
-        let sides: Int
-        let generator: RandomNumberGenerator
-        init(sides: Int, generator: RandomNumberGenerator) {
-            self.sides = sides
+        let generator: SomeGeneratorProtocol
+        init(sides: Int, generator: SomeGeneratorProtocol) {
             self.generator = generator
         }
-        func roll() -> Int {
-            return Int(generator.random() * Double(sides)) + 1
-        }
-    }
-
-    var d6 = Dice(sides: 6, generator: LinearCongruentialGenerator())
-
-    for _ in 1...5 {
-        println("Random dice roll is \(d6.roll())")
     }
     ```
 
 ### Delegation
 
-  * A design pattern that enables a class or structure to hand off (or delegate) some of its responsibilities to an instance of another type
   * Implemented by defining a protocol that encapsulates the delegated responsibilities
 
   ```swift
@@ -3248,7 +3153,6 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 ### Class-Only Protocol
 
   * Limit protocol adoption to class types (and not structures or enumerations) by adding the class keyword to a protocol's inheritance list:
-
     ```swift
     protocol SomeClassOnlyProtocol: class, SomeInheritedProtocol {
       // class-only protocol definition goes here
@@ -3262,7 +3166,6 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
   * You can combine multiple protocols into a single protocol composition.
     * protocol<SomeProtocol, AnotherProtocol>
-
     ```swift
     protocol Named {
         var name: String { get }
@@ -3284,111 +3187,46 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   * Note
     * Protocol compositions do not define a new, permanent protocol type, rather they define a temporary local protocol that has the combined requirements of all protocols in the composition.
 
-### Checking for Protocol Conformance
+### Protocol Conformance
 
-  * You can use is and as operators
-
+  * is operator returns true if an instance conforms to a protocol and returns false if it does not.
+  * as? returns an optional value of the protocol’s type, and this value is nil if the instance does not conform to that protocol.
+  * as! forces the downcast to the protocol type and triggers a runtime error if the downcast does not succeed.
     ```swift
-    @objc protocol HasArea {
+    protocol HasArea {
       var area: Double { get }
-    }
-    ```
-
-  * Note
-    * You can check protocol conformance only if your protocol is marked with the @objc attribute
-    * It indicates that protocol should be exposed to Objective-C Code
-    * @objc protocols can be adopted only by classes, not by structures or enumerations
-
-
-    ```swift
-    class Circle: HasArea {
-        let pi = 3.1415927
-        var radius: Double
-        var area: Double { return pi * radius * radius }
-        init(radius: Double) { self.radius = radius }
-    }
-
-    class Country: HasArea {
-        var area: Double
-        init(area: Double) { self.area = area }
     }
 
     for object in objects {
         if let objectWithArea = object as? HasArea {
             println("Area is \(objectWithArea.area)")
-        } else {
-            println("Something that doesn't have an area")
+        } 
+    }
+    ```
+
+### Protocol Extensions
+    * Protocols can be extended to provide method and property implementations to conforming types
+    * Protocols can provide default implementations of a required method or property
+    ```swift
+    extension RandomNumberGenerator {
+        var randomVariable: Bool { return randomBool() } // var inherited by other protocol
+
+        func randomBool() -> Bool {
+          return random() > 0.5
         }
     }
     ```
 
-### Optional Protocol Requirements
+### Protocol Constraints
 
-  * These requirements do not have to be implemented by types that conform to the protocol
-  * Prefixed by "optional"
-  * Optional protocol requirement can be called with optional chaining
-  * You can check implementation of an optional requirement by writing a question mark after the name of the requirement
-    * someOptionalMethod?(someArgument)
-  * Optional property/method requirements will return an optional value
-  * Note
-    * Optional protocol can only be specified if the protocol is marked with the @objc attribute
-    * Even if you are not interoperating with Obj-C you need to mark your protocols with @objc
-    * @objc can only be adopted by classes, not structures/enumerations
-
+    * Use "where" keyword
     ```swift
-    @objc protocol CounterDataSource {
-        optional func incrementForCount(count: Int) -> Int
-        optional var fixedIncrement: Int { get }
-    }
-
-    @objc class Counter {
-        var count = 0
-        var dataSource: CounterDataSource?
-        func increment() {
-            if let amount = dataSource?.incrementForCount?(count) {
-                count += amount
-            } else if let amount = dataSource?.fixedIncrement? {
-                count += amount
-            }
+    extension Collection where Iterator.Element: TextRepresentable {
+        var textualDescription: String {
+            let itemsAsText = self.map { $0.textualDescription }
+            return "[" + itemsAsText.joined(separator: ", ") + "]"
         }
     }
-
-    class ThreeSource: CounterDataSource {
-        let fixedIncrement = 3
-    }
-
-    var counter = Counter()
-    counter.dataSource = ThreeSource()
-
-    for _ in 1...4 {
-        counter.increment()
-        println(counter.count)
-    }
-
-    class TowardsZeroSource: CounterDataSource {
-        func incrementForCount(count: Int) -> Int {
-            if count == 0 {
-                return 0
-            } else if count < 0 {
-                return 1
-            } else {
-                return -1
-            }
-        }
-    }
-
-    counter.count = -4
-    counter.dataSource = TowardsZeroSource()
-
-    for _ in 1...5 {
-        counter.increment()
-        println(counter.count)
-    }
-    // -3
-    // -2
-    // -1
-    // 0
-    // 0
     ```
 
 [Back to top](#swift-cheatsheet)
