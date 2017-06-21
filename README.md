@@ -2885,18 +2885,17 @@ There are four ways to handle errors
 ### Overview
 
   * Add new functionality to existing class, structure or enumeration type
+  * Extensions can add new functionality, but can not override existing functionality
   * Extend types for which you do not have access to the original source code (retroactive modelling)
   * Extension similar to categories in Obj-C, except it does not have names.
   * Extensions in Swift can:
-    * Add computed properties and computed static properties
+    * Define computed properties and computed static properties. Cannot define stored properties or add property observers to existing properties
     * Define instance and type methods
-    * Provide new inits
+    * Define convenience initialisers but they cannot add new designated initialisers or deinitializers
     * Define subscripts
     * Define and use new nested types
     * Make an existing type conform to a protocol
-  * Note
-    * Extensions can add new functionality, but can not override existing functionality
-
+    
 ### Extension Syntax
 
 ```swift
@@ -2911,151 +2910,6 @@ extension SomeType: SomeProtocol, AnotherProtocol {
 ```
   * If you define an extension, the new functionality will be available to all instances, even if they were created before the extension was defined.
 
-### Computed Properties
-
-  * Can add computed properties and computed type properties to existing types:
-
-    ```swift
-    extension Double {
-        var km: Double { return self * 1_000.0 }
-        var m: Double { return self }
-        var cm: Double { return self / 100.0 }
-        var mm: Double { return self / 1_000.0 }
-        var ft: Double { return self / 3.28084 }
-    }
-
-    let oneInch = [25.4.mm][4]
-    println("One inch is \(oneInch) meters")      // prints "One inch is 0.0254 meters"
-
-    let threeFeet = 3.ft
-    println("Three feet is \(threeFeet) meters")  // prints "Three feet is 0.914399970739201 meters
-
-    let aMarathon = 42.km + 195.m
-    ```
-
-  * Extensions add new computed properties but they cannot add stored properties, add property observers to existing properties
-
-### Initializers
-
-  * Extensions can add new convenience initialisers to a class, but they cannot add new designated initialisers or deinitializers to a class
-  * Designated initialisers and deinitializer must always be provided by original class implementation
-
-    ```swift
-    struct Size {
-        var width = 0.0, height = 0.0
-    }
-
-    struct Point {
-        var x = 0.0, y = 0.0
-    }
-
-    struct Rect {
-        var origin = Point()
-        var size = Size()
-    }
-
-    let defaultRect = Rect()
-    let memberwiseRect = Rect(origin: Point(x: 2.0, y: 2.0), size: Size(width: 5.0, height: 5.0))
-
-    extension Rect {
-        init(center: Point, size: Size) {
-            let originX = center.x - (size.width / 2)
-            let originY = center.y - (size.height / 2)
-            self.init(origin: Point(x: originX, y: originY), size: size)
-        }
-    }
-
-    let centerRect = Rect(center: Point(x: 4.0, y: 4.0),
-        size: Size(width: 3.0, height: 3.0))
-    ```
-
-### Methods
-
-  * Add new instance methods and type methods to existing types
-
-    ```swift
-    extension Int {
-        func repetitions(task: () -> ()) {
-            for i in 0..<self {
-                task()
-            }
-        }
-    }
-
-    3.repetitions({
-        println("Hello!")
-    })
-    ```
-
-  * Mutating Instance Methods
-    * Instance methods added with extension can also modify (mutate the instance itself
-
-      ```swift
-      extension Int {
-        mutating func square() {
-          self = self * self
-        }
-      }
-      ```
-
-### Subscripts
-
-
-```swift
-extension Int {
-    subscript(var digitIndex: Int) -> Int {
-        var decimalBase = 1
-        while digitIndex > 0 {
-            decimalBase *= 10
-            --digitIndex
-        }
-        return (self / decimalBase) % 10
-    }
-}
-746381295[0]  // returns 5
-746381295[1]  // returns 9
-746381295[2]  // returns 2
-746381295[8]  // returns 7
-746381295[9]  // returns 0, as if you had requested:
-0746381295[9]
-```
-
-### Nested Types
-
-```swift
-extension Int {
-    enum Kind {
-        case Negative, Zero, Positive
-    }
-
-    var kind: Kind {
-        switch self {
-        case 0:
-            return .Zero
-        case let x where x > 0:
-            return .Positive
-        default:
-            return .Negative
-        }
-    }
-}
-
-func printIntegerKinds(numbers: [Int]) {
-    for number in numbers {
-        switch number.kind {
-        case .Negative:
-            print("- ")
-        case .Zero:
-            print("0 ")
-        case .Positive:
-            print("+ ")
-        }
-    }
-    print("\n")
-}
-
-printIntegerKinds([3, 19, -27, 0, -6, 0, 7])  // prints "+ + - 0 - 0 +"
-```
 
 [Back to top](#swift-cheatsheet)
 
