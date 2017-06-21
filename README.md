@@ -2712,8 +2712,8 @@ class SomeClass {
     ```
 ### Handling Errors
 There are four ways to handle errors
-  1. Propagate the Error using throwing
-  
+  * Propagate the Error using throwing
+
     ```swift
     // throws error 
     func vend(itemNamed name: String) throws {
