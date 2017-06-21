@@ -3188,7 +3188,6 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * Protocol compositions do not define a new, permanent protocol type, rather they define a temporary local protocol that has the combined requirements of all protocols in the composition.
 
 ### Protocol Conformance
-
   * is operator returns true if an instance conforms to a protocol and returns false if it does not.
   * as? returns an optional value of the protocol’s type, and this value is nil if the instance does not conform to that protocol.
   * as! forces the downcast to the protocol type and triggers a runtime error if the downcast does not succeed.
@@ -3218,7 +3217,6 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     ```
 
 ### Protocol Constraints
-
     * Use "where" keyword
     ```swift
     extension Collection where Iterator.Element: TextRepresentable {
@@ -3415,7 +3413,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   ```
 
 ### Generic Subscripts
-  ```swift
+  ``swift
   extension Container {
       subscript<Indices: Sequence>(indices: Indices) -> [Item]
           where Indices.Iterator.Element == Int {
