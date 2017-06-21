@@ -3434,50 +3434,43 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
 ## Access Control
 
-### Overview
-
-  * Restricst access to parts of your code from code in other source files and modules
-  * You can assign specific access levels to individual types (classes, structures, and enumerations), as well as properties, methods, initialisers, subscripts
-  * Protocols can be restricted to a certain context, as can global constants, variables and functions
-  * Reduces the need to specify explicit access control levels by providing default access levels for typical scenarios
-  * Note
-    * Various aspics of your code that can have access control (properties, types, functions, etc) are referred as entities
-
-### Modules and Source Files
-
-  * Swift's access control model is base on the concept of modules and source files
-  * Module is a single unit code of distributions
-    * A framework or application buildt and shipped as a single entity that can be imported by another module with Swift's **import** keyword
-    * Each build target (such as an app bundle or framework) in Xcode is treated as a separate module in Swift
-  * A source file is a single Swift source code within a module (in effect a single file within an app or framework
-    * Though it is common to define individual types in a separate source files, a single source file can contain multiple types, functions, and so on
-
 ### Access Levels
 
   * **Overview**
-    * 3 different access levels
-      * Public access
+    * 5 different access levels (Least to most restrictive)
+      * Open access and Public access
         * Entities to be used within any source file from their defining module and also in a source file from another module that imports the defining module
-        * When specifying the public interface to a framework
+        * Used when specifying the public interface to a framework
+        * Open access applies only to classes and class members, and it differs from public access as follows:
+          * Classes with public access, or any more restrictive access level, can be subclassed only within the module where they’re defined.
+          * Class members with public access, or any more restrictive access level, can be overridden by subclasses only within the module where they’re defined.
+          * Open classes can be subclassed within the module where they’re defined, and within any module that imports the module where they’re defined.
+          * Open class members can be overridden by subclasses within the module where they’re defined, and within any module that imports the module where they’re defined.
       * Internal access
         * Entities to be used within any source file from their defining module, but not in any source file outside that module
-        * When defining an app's or framework's internal structure
+        * Used when defining an app's or framework's internal structure
+      * File Private access
+        * Entities to be used within its own defining source file
+        * Used when wanting to hide the implementation details of a specific piece of functionality.
       * Private access
-        * Restrict the use of an entity to its own defining source file
-        * To hide implementation of a specific piece of functionality
+        * Restrict the use of an entity to the enclosing declaration, and to extensions in the same file.
+        * Used when wanting to hide the implementation details of a specific piece of functionality when those details are used only within a single declaration.
+
   * **Guiding Principle of Access Levels**
     * No entity can be defined in terms of another entity that has a lower (more restrictive) access level
     * Example:
       * A public variable cannot be defined as having an internal or private type, because the type might not be available everywhere that the public variable is used
       * A function cannot have a higher access level than its parameter types and return type
+
   * **Default Access Levels**
     * Internal access with a few exceptions
+
   * **Access Levels for Single-Target App**
     * Typically you only need an internal access, unless you want to mark some parts of your code as private in order to hide their implementation details from other app's module.
+
   * **Access Levels for Framework**
-    * Public access, as you are building public facing interface
-    * Note
-      * Any internal implementation details can still be internal or private.
+    * Public access, as you are building public facing interface API (Façade)
+    * Any internal implementation details can still be internal or private.
 
 ### Access Control Syntax
 
@@ -3486,10 +3479,12 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     ```swift
     public class SomePublicClass {}
     internal class SomeInternalClass {}
+    fileprivate class SomeFilePrivateClass {}
     private class SomePrivateClass {}
-
+     
     public var somePublicVariable = 0
     internal let someInternalConstant = 0
+    fileprivate func someFilePrivateFunction() {}
     private func somePrivateFunction() {}
     ```
 
@@ -3501,55 +3496,41 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
       ```
 
   * Custom Types
-    * If you want to specify an explicit access level to a custom type, do at the point that you define the type.
-      * The new type can then be used whenever its access level permits.
-      * Access level of a type also affects the default access level of type's members (properties, methods, inits and subscripts)
-      * If type's access level i private, all its members default level is also private
-    * Note
-      * A public type defaults to having internal members, not public members
-      * If you want type member to be public, you must explicitly mark it as such
-      * Ensure API is something you opt-in to publish
-
       ```swift
-      public class SomePublicClass {         // explicitly public class
-          public var somePublicProperty = 0 // explicitly public class member
-          var someInternalProperty = 0 // implicitly internal class member
-          private func somePrivateMethod() {} // explicitly private class member
+      public class SomePublicClass {                   // explicitly public class
+          public var somePublicProperty = 0            // explicitly public class member
+          var someInternalProperty = 0                 // implicitly internal class member
+          fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
+          private func somePrivateMethod() {}          // explicitly private class member
       }
-
-      class SomeInternalClass {              // implicitly internal class
-          var someInternalProperty = 0 // implicitly internal class member
-          private func somePrivateMethod() {} // explicitly private class member
+       
+      class SomeInternalClass {                        // implicitly internal class
+          var someInternalProperty = 0                 // implicitly internal class member
+          fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
+          private func somePrivateMethod() {}          // explicitly private class member
       }
-
-      private class SomePrivateClass {       // explicitly private class
-          var somePrivateProperty = 0 // implicitly private class member
-          func somePrivateMethod() {}         // implicitly private class member
+       
+      fileprivate class SomeFilePrivateClass {         // explicitly file-private class
+          func someFilePrivateMethod() {}              // implicitly file-private class member
+          private func somePrivateMethod() {}          // explicitly private class member
+      }
+       
+      private class SomePrivateClass {                 // explicitly private class
+          func somePrivateMethod() {}                  // implicitly private class member
       }
       ```
 
     * Tuple Types
       * Access level for a tuple type is the most restrictive access level of all types used in the tuple.
-      * If members of the tuple comprises of internal and private access, tuple will be private
-      * Note
-        * Tuple does not have a standalone definition in a way that classes, structures, enums and functions do
-        * Tuple type's access is deduced automatically when the tuple is used
+      
     * Function Types
       * Access level for a function type is calculated as the most restrictive access level of the function's parameter types and return type
-
+      * Example: Because the function's return type is private, you must mark the function's overall access level with private:
         ```swift
-        func someFunction() -> (SomeInternalClass, SomePrivateClass) {
-          // function implementation goes here
+        private func someFunction() -> (SomeInternalClass, SomePrivateClass) {
+        // function implementation goes here
         }
         ```
-
-        * Because the function's return type is private, you must mark the function's overall access level with private:
-
-          ```swift
-          private func someFunction() -> (SomeInternalClass, SomePrivateClass) {
-          // function implementation goes here
-          }
-          ```
 
     * Enumeration Types
       * Individual cases of an enums automatically receive the same access level as the enum they belong to
@@ -3567,48 +3548,50 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * Raw Values and Association Type
       * The types used for any raw values or associated values in enum must have an access level at least as high as the enum's access level
       * You cannot use a private type as the raw value type of an enumeration with an internal access level for example.
+
     * Nested Types
       * Nested types within a private type will be private
       * Nested types in a public type or internal type will be internal
       * Explicitly declare public type as public to be public
+
   * Subclassing
     * Subclass cannot have a higher level access level than its superclass
-    * You can override any class member that is visible in a certain access context
+    * You can override any method, property, initializer, or subscript that is visible in a certain access context
       * An override can make inherited class more accessible than its superclass
-        * public class A {
-        * private func someMethod() {}
-        * }
-          * internal class B: A {
-        * override internal func someMethod() {}
-        * }
-    * Valid for a subclass member to call a superclass member that has lower access permission, as long as the call takes place within the allowed access level context
-      * same source file as the superclass for a private member call
-      * within the same module for internal member call
+        ```swift
+        public class A {
+            private func someMethod() {}
+        }
+        internal class B: A {
+            override internal func someMethod() {} // less restrictive than the superclass
+        }
+        ```
 
-      ```swift
-      public class A {
-          private func someMethod() {}
-      }
+      * Valid for a subclass member to call a superclass member that has lower access permission, as long as the call takes place within the allowed access level context
+        ```swift
+        public class A {
+            private func someMethod() {}
+        }
 
-      internal class B: A {
-          override internal func someMethod() {
-              super.someMethod()
-          }
-      }
-      ```
+        internal class B: A {
+            override internal func someMethod() {
+                super.someMethod()
+            }
+        }
+        ```
 
 ### Constants, Variables, Properties, and Subscripts
 
   * A contant, variable or property cannot be more public than its type
   * If a class member makes use of a private type, the member must also be declared as private
     * private var privateInstance = SomePrivateClass()
-  * **Getters and Setters**
+  * Getters and Setters
     * Getters and setters for class members (constants, vars, props, subscripts) automatically receive the same access they belong to
     * You can give setter a lower access level than its corresponding getter to restrict the read-write scope of that member.
       * By writing **private(set)** or **internal(set)** before the var or subscript introducer
     * Note
       * This rule apply for stored and computed properties
-
+        ```swift
         struct TrackedString {
             private(set) var numberOfEdits = 0
             var value: String = "" {
@@ -3624,6 +3607,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
         stringToEdit.value += " So will this one."
         println("The number of edits is \(stringToEdit.numberOfEdits)")
         // prints "The number of edits is 3"
+        ```
 
       * You can assign explicit access level for both getter and setter if required, e.g. numberOfEdits getter is public and set is private:
 
@@ -3644,11 +3628,13 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   * Custom inits can be assigned access level <= type they initialise
   * Except for required init must have the same access level as the class it belongs to
   * As with functions/methods, types of params cannot be more private than the init
-  * **Default Initializers**
+
+  * Default Initializers
     * Default init has the same access level as the type initializes
     * For a public type, the default init is considered internal
       * Declare as public if you need to expose it
-  * **Default Memberwise Initializers for Structure Types**
+
+  * Default Memberwise Initializers for Structure Types
     * Default member wise init for a structure is considered private if any of the structure's stored properties are private
     * Otherwise it is internal
 
@@ -3660,10 +3646,12 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * Ensure that all the protocol's requirements will be visible on any type that adopts the protocol
   * Note
     * If you define public protocol, the protocol's requirements require a public access level for those requirements when they are implemented
-  * **Protocol Inheritance**
+
+  * Protocol Inheritance
     * Inherited protocol have the same access level with its parent.
     * You cannot write a public protocol that inherits from an internal protocol
-  * **Protocol Conformance**
+
+  * Protocol Conformance
     * A type can conform to a protocol with a lower access level than the type itself
     * The context type conforms to a  particular protocol is the min of the type's access level and the protocol's access level
       * If a type is public, and protocol is internal, type's conformance to that protocol is also internal
@@ -3675,7 +3663,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 ### Extensions
 
   * Any members added in an extension have the same default access level as the type members declared in the original type being extended.
-  * **Adding a protocol conformance with an extension**
+  * Adding a protocol conformance with an extension
     * You cannot provide an explicit access level modifier for an extension if you are using that extension to add protocol conformance.
     * Protocol's own access level is used to privde the default access for each of the protocol requirements.
 
