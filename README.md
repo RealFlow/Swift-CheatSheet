@@ -2790,39 +2790,6 @@ There are four ways to handle errors
     * To check the type of a value or cast a value to a different type
   * Also used to check whether a type conforms to a protocol
 
-### Defining a Class Hierarchy for Type Casting
-
-```swift
-class MediaItem {
-    var name: String
-    init(name: String) {
-        [self.name][2] = name
-    }
-}
-class Movie: MediaItem {
-    var director: String
-    init(name: String, director: String) {
-        self.director = director
-        super.init(name: name)
-    }
-}
-
-class Song: MediaItem {
-    var artist: String
-    init(name: String, artist: String) {
-        self.artist = artist
-        super.init(name: name)
-    }
-}
-let library = [
-    Movie(name: "Casablanca", director: "Michael Curtiz"),
-    Song(name: "Blue Suede Shoes", artist: "Elvis Presley"),
-    Movie(name: "Citizen Kane", director: "Orson Welles"),
-    Song(name: "The One And Only", artist: "Chesney Hawkes"),
-    Song(name: "Never Gonna Give You Up", artist: "Rick Astley")
-]
-```
-
 ### Checking Type
 
   * Use type check operator (is) to check whether an instance is a certain subclass type
@@ -2859,80 +2826,20 @@ let library = [
 
 ### Type Casting for Any and AnyObject
 
-  * Swift provide two special type aliases for working with non-specific types
-    * AnyObject: an instance of any class type
-    * Any: an instance of any type at all apart from function types
-  * Note
-    * Use Any and AnyObject when you explicitly need the behaviour and capabilities.
-    * It is always better to be specific with the types you work with.
-  * AnyObject
-    * When you work with CocoaAPI, it is common to receive an array of [AnyObject]
-    * Because Obj-C does not have an Array of explicitly typed objects
-    * Use as to downcast each item in the array
+  * Swift provide two special type for working with non-specific types
+    * Any: represents an instance of any type at all, including function types.
+    * AnyObject: represents an instance of any class type.
+    ```swift
+    var things = [Any]()
 
-      ```swift
-      let someObjects: [AnyObject] = [
-        Movie(name: "2001: A Space Odyssey", director: "Stanley Kubrick"),
-        Movie(name: "Moon", director: "Duncan Jones"),
-        Movie(name: "Alien", director: "Ridley Scott")
-      ]
-
-      for object in someObjects {
-
-      let movie = object as Movie
-      println("Movie: '\(movie.name)', dir. \(movie.director)")
-      }
-      ```
-
-      * Shorter version
-      ```swift
-        for movie in someObjects as [Movie] {
-          println("Movie: '\(movie.name)', dir. \(movie.director)")
-        }
-      ```
-  * Any
-    * To work with a mix of different types including non-class types
-
-      ```swift
-      var things = [Any]()
-
-      things.append(0)
-      things.append(0.0)
-      things.append(42)
-      things.append(3.14159)
-      things.append("hello")
-      things.append((3.0, 5.0))
-      things.append(Movie(name: "Ghostbusters", director: "Ivan Reitman"))
-      ```
-    * Contains Int, Double, String, (Double, Double), Movie
-
-      ```swift
-      for thing in things {
-          switch thing {
-          case 0 as Int:
-              println("zero as an Int")
-          case 0 as Double:
-              println("zero as a Double")
-          case let someInt as Int:
-              println("an integer value of \(someInt)")
-          case let someDouble as Double where someDouble > 0:
-              println("a positive double value of \(someDouble)")
-          case is Double:
-              println("some other double value that I don't want to print")
-          case let someString as String:
-              println("a string value of \"\(someString)\"")
-          case let (x, y) as (Double, Double):
-              println("an (x, y) point at \(x), \(y)")
-          case let movie as Movie:
-              println("a movie called '\(movie.name)', dir. \(movie.director)")
-          default:
-              println("something else")
-          }
-      }
-      ```
-
-    * Note
-      * The case of a switch statement, use the forced version of type cast operator, as.
+    things.append(0)
+    things.append(0.0)
+    things.append(42)
+    things.append(3.14159)
+    things.append("hello")
+    things.append((3.0, 5.0))
+    things.append(Movie(name: "Ghostbusters", director: "Ivan Reitman"))
+    ```
 
 [Back to top](#swift-cheatsheet)
 
