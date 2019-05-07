@@ -1471,7 +1471,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     alsoIncrementByTen()
     ```
 ### Escaping Closures
-
+  * @escaping means "Escape from being removed"
   * Whenever the closure is passed as an argument to the function, but is called after the function returns.
   * Write @escaping before the parameter’s type to indicate that the closure is allowed to escape.
   * As an example, many functions that start an asynchronous operation take a closure argument as a completion handler.
