@@ -1009,13 +1009,15 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
 
   * Switch
     ```swift
-    switch [value] {
-      case [value 1]:
-      // respond to value 1
-      case [value 2], [value 3]:
-      // respond to value 2 or 3
-      default:
-      // otherwise, do something else
+    let anotherCharacter: Character = "a"
+    switch anotherCharacter {
+        case "a": // Invalid, the case has an empty body
+        case "A":
+            print("The letter A")
+        case "b","B":
+            print("The letter B")
+        default:
+           print("Not the letter A")
     }
     ```
 
@@ -1071,7 +1073,7 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
       switch anotherPoint {
         case (let x, 0):
           ...
-        case (0, ley y):
+        case (0, let y):
           ...
         case let (x, y):
           ...
