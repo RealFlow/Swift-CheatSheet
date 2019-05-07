@@ -1121,16 +1121,20 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
     * Switch statements in Swift do not fall through the bottom of each case into the next one
     * To enable fall through the next case use fallthrough keyword
       ```swift
-      case abc:
-        // fallthrough
-      case next:
-        // executed again
-        // fallthrough
+      let integerToDescribe = 5
+      var description = "The number \(integerToDescribe) is"
+      switch integerToDescribe {
+       case 2, 3, 5, 7, 11, 13, 17, 19:
+       description += " a prime number, and also"
+       fallthrough
       default:
-        // executed again
+       description += " an integer."
+      }
+      print(description)
+      // Prints "The number 5 is a prime number, and also an integer."
       ```
 
-    * Fallthrough does not check the next condition
+    * Fallthrough does not check the next condition. It simply causes code execution to move directly to the statements inside the next case.
   * Labeled Statements
     * You can nest switch statement inside another loop statement
     * Sometimes it is important to be explicit which statement you want to break/continue
