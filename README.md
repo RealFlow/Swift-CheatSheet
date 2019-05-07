@@ -1002,7 +1002,7 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
 
   * If
     ```swift
-    if [cond]  { ... }
+    if [cond] { ... }
     if [cond] { ... } else { ... }
     if [cond] { ... } else if [cond] { ...  }
     ```
