@@ -1,6 +1,6 @@
 # Swift-CheatSheet
 
-Swift 4 CheatSheet (Rev. 2017-06-05)
+Swift 5 CheatSheet (Rev. 2019-03-25)
 
 Notes taken from [The Swift Programming Language](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID309).
 
@@ -325,7 +325,7 @@ let cat="hello"; println(cat)
 
     * If you try to access an implicitly unwrapped optional when it does not contain value, it will trigger runtime error, same with optional
 
-### Assertions
+### Assertions and Preconditions
 
   * Some cases, not possible for code to continue, use assertions end code execution, to provide an opportunity to debug
     ```swift
@@ -338,6 +338,12 @@ let cat="hello"; println(cat)
     * Value passed to a function, check for invalid value
     * An optional value is currently nil, but a non-nil value is essential for subsequent code to execute
   * Assertion cause app to terminate, an effective way to check conditions before app is published
+
+  * Use a precondition whenever a condition has the potential to be false, but must definitely be true for your code to continue execution (i.e. outOfBounds)
+    ```swift
+    // In the implementation of a subscript...
+    precondition(index > 0, "Index must be greater than zero.")
+    ```
 
 [Back to top](#swift-cheatsheet)
 
@@ -469,6 +475,14 @@ a ? b : c
     a >= b
     a <= b
     ```
+  * In tuples
+    ```swift
+    (1, "zebra") < (2, "apple")   // true because 1 is less than 2; "zebra" and "apple" are not compared
+    (3, "apple") < (3, "bird")    // true because 3 is equal to 3, and "apple" is less than "bird"
+    (4, "dog") == (4, "dog")      // true because 4 is equal to 4, and "dog" is equal to "dog"
+    ("blue", -1) < ("purple", 1)        // OK, evaluates to true
+    ("blue", false) < ("purple", true)  // Error because < can't compare Boolean values
+    ```
 
   * Swift also provides two identity operators === and !==
     * Test two object references both refer to the same object instance
@@ -490,7 +504,7 @@ a ? b : c
 ### Range Operators
 
   * Closed Range Operator
-    * a..b
+    * a...b
     * Defines a range that runs from a to be, and includes the values of a and b
     ```swift
     for index in 1...5 { ... }
@@ -559,12 +573,16 @@ a ? b : c
 ```swift
 let someString = "Some string literal value"
 let multilineString = """
-These is a multiline String
+These is a multiline String. The White Rabbit put on his spectacles.  "Where shall I begin,
+please your Majesty?" he asked.
 """
 let threeDoubleQuotes = """
 Escaping the first quote \"""
 Escaping all three quotes \"\"\"
 """
+let threeMoreDoubleQuotationMarks = #"""
+Here are three more double quotes: """
+"""#
 ```
 
 ### Initializing an Empty String
@@ -623,6 +641,10 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
   ```swift
   let multiplier = 3
   let message = "\(multiplier) times 2.5 is \(Double(multiplier) * 2.5)"
+  print(#"Write an interpolated string in Swift using \(multiplier)."#)
+  // Prints "Write an interpolated string in Swift using \(multiplier)."
+  print(#"6 times 7 is \#(6 * 7)."#)
+  // Prints "6 times 7 is 42."
   ```
 
 ### Unicode
@@ -796,12 +818,12 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
   * Arrays, Sets and Dictionaries
   * Arrays and dictionaries in Swift are always clear about the types of values and keys that they can store.
   * You cannot insert a value of the wrong type
-  * Swift's array and dictionaries are implemented as generic collections.
+  * Swift's array, sets and dictionaries are implemented as generic collections.
 
 ### Mutability of Collections
 
-  * If you create a collection and assign it to a variable, it is mutable
-  * It is immutable for a constant
+  * Assign collection to a variable (var) means it is a mutable collection.
+  * Assign collection to a constant (let) means it is a immutable collection.
 
 ### Arrays
 
@@ -871,8 +893,14 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
 ### Sets
   * Overview
    * Stores distinct values of same time with no defined ordering
-  * Set Type Shorthand Syntax
+  * Hash Values
+   * A type must be hashable in order to be stored in a set
+   * Swift’s basic types (String, Int, Double, and Bool) are hashable by default
+   * Enumeration case values without associated values are hashable by default
+   * Rest of cases, implement 'Hashable' protocol (in turns conforms 'Equatable')
+  * Set Type Syntax
     * **Set<ValueType>()
+    * Unlike Arrays and Dictionaries, Sets do not have an equivalent shorthand form.
   * Creating and Initialising
     ```swift
     var letters = Set<Character>()
@@ -882,8 +910,12 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
   * Set Literals
     ```swift
     var genres: Set<String> = ["Rock", "Classical", "Hip Hop"]
-      * You dont need to write the type of a set if it contains elements of the same type.
     ```
+   * Type is inferred if all elements are of the same type.
+   ```swift
+    var genres: Set = ["Rock", "Classical", "Hip Hop"]
+    ```
+    
   * Accessing and Modifying a Set
     ```swift
     genres.isEmpty
@@ -909,10 +941,18 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
     [key 1: value 1, key 2: value 2, key 3: value 3]
     var airports: [String: String] = ["TYO": "Tokyo", "DUB": Dublin"]
     ```
-
-    * If key and values are consistent, you could skip the type definition
+    * If key and values are consistent, type definition is inferred
       ```swift
       var airports = ["TYO": "Tokyo", "DUB": "Dublin"]
+      ```
+  * Creating and Initializing
+    ```swift
+      var namesOfIntegers = [Int: String]()
+      // namesOfIntegers is an empty [Int: String] dictionary
+      namesOfIntegers[16] = "sixteen"
+      // namesOfIntegers now contains 1 key-value pair
+      namesOfIntegers = [:]
+      // namesOfIntegers is once again an empty dictionary of type [Int: String]
       ```
 
   * Accessing and Modifying a Dictionary
@@ -930,14 +970,12 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
     for (airportCode, airportName) in airports { ... }
     for key in airport.keys { ... }
     for value in airport.values { ... }
+
+    let airportCodes = [String](airports.keys)
+    let airportNames = [String](airports.values)
     ```
 
     * Swift's Dictionary is an unordered collection
-  * Creating and Empty Dictionary
-    ```swift
-    var namesOfIntegers = [Int: String]() // empty dictionary
-    namesOfIntegers[:]                    // reset to empty, once the context is already known
-    ```
 
   * Hash Values for Dictionary Key Types
     * A type must be hash able to be used as dictionary's key type
