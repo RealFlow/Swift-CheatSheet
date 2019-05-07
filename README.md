@@ -735,12 +735,12 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
     ```
 
 ### Substrings
-    ```swift
-    let greeting = "hello, world!"
-    let index = greeting.index(of: ",") ?? greeting.endIndex
-    let beginning = greeting[..<index]  // hello
-    let newString = String(beginning)
-    ```
+```swift
+let greeting = "hello, world!"
+let index = greeting.index(of: ",") ?? greeting.endIndex
+let beginning = greeting[..<index]  // hello
+let newString = String(beginning)
+```
 
 ### Comparing Strings
 
@@ -899,7 +899,7 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
    * Enumeration case values without associated values are hashable by default
    * Rest of cases, implement 'Hashable' protocol (in turns conforms 'Equatable')
   * Set Type Syntax
-    * **Set<ValueType>()
+    * **Set<ValueType>()**
     * Unlike Arrays and Dictionaries, Sets do not have an equivalent shorthand form.
   * Creating and Initialising
     ```swift
@@ -912,7 +912,7 @@ variableString += "and Carriage"  // var is now "Horse and Carriage"
     var genres: Set<String> = ["Rock", "Classical", "Hip Hop"]
     ```
    * Type is inferred if all elements are of the same type.
-   ```swift
+    ```swift
     var genres: Set = ["Rock", "Classical", "Hip Hop"]
     ```
     
