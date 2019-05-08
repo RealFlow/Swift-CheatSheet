@@ -2342,8 +2342,9 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
           }
         }
         ```
+      * You must always declare name and type of overriden property to help the compiler to check validation.
 
-    * Overriding property Observers
+    * Overriding Property Observers
       * Override the property to add the observers
       * Note
         * You cannot add property observers to inherited ('cause cannot be set): 
