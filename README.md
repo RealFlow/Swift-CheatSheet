@@ -2067,7 +2067,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
   * Functions associated with a particular type
   * Classes, structures and enumerations can define instance and type methods (~class methods).
-  * Major difference from C and Obj-C. In Obj-C, only classes can define methods.
+  * Major difference between Swift and Obj-C. In Obj-C, only classes can define methods.
 
 ### Instance Methods
   ```swift
@@ -2088,6 +2088,14 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * The self Property
     * self refers to current instance
     * self disambiguates between method parameter and same named instance properties (setter collision)
+    ```swift
+    struct Point {
+      var x = 0.0, y = 0.0
+      func isToTheRightOf(x: Double) -> Bool {
+        return self.x > x
+      }
+    }
+    ```
 
   * Modifying Value Types from Within Instance Methods
     * Structures and enumeration are value types. By Default properties of a value type cannot be modified from within its instance methods.
@@ -2210,7 +2218,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     }
     ```
 
-    * As with read-only computed properties, you can drop the get keyword:
+    * As with read-only computed properties, simplify read-only syntax by removing get keyword:
       ```swift
       struct TimesTable {
           let multiplier: Int
