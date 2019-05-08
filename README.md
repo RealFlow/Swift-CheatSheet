@@ -1628,6 +1628,18 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   ```
   * Switch statement must be exhaustive considering an enumeration's members, if .West is omitted, there'll be a compilation error.
 
+### Iterating
+
+  * Implement 'CaseIterable' protocol to access to 'allCases' property
+  ```swift
+  enum Beverage: CaseIterable {
+    case coffee, tea, juice
+  }
+  let numberOfChoices = Beverage.allCases.count
+  print("\(numberOfChoices) beverages available")
+  // Prints "3 beverages available"
+  ```
+
 ### Associated Values
 
   * Sometimes it is useful to store associated values of other types along with these member values.
@@ -1642,6 +1654,28 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     }
     var productBarCode = Barcode.UPCA(8, 85909, 51226, 3)
     productBarCode = .QRCode("ABCDEF")
+    ```
+
+    You extract each associated value as a constant or a variable
+    ```swift
+    switch productBarcode {
+      case .upc(let numberSystem, let manufacturer, let product, let check):
+        print("UPC: \(numberSystem), \(manufacturer), \(product), \(check).")
+      case .qrCode(let productCode):
+        print("QR code: \(productCode).")
+    }
+    // Prints "QR code: ABCDEFGHIJKLMNOP."
+    ```
+
+    If all of the associated values for an enumeration case are extracted as constants, or if all are extracted as variables, you can place a single var or let annotation before the case name
+    ```swift
+    switch productBarcode {
+      case let .upc(numberSystem, manufacturer, product, check):
+        print("UPC : \(numberSystem), \(manufacturer), \(product), \(check).")
+      case let .qrCode(productCode):
+        print("QR code: \(productCode).")
+    }
+    // Prints "QR code: ABCDEFGHIJKLMNOP."
     ```
 
 ### Raw Values
@@ -1670,7 +1704,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Recursive Enumerations
   * Has another enumeration for some case
-  * Write **indirect** before the particular case, or before the enum in case all cases are indirect
+  * Write **indirect** before a case to indicate a case is recursive.
+  * Write **indirect** before the enum to indicate all cases are recursive.
     ```swift
     enum ArithmeticExpression {
         case number(Int)
