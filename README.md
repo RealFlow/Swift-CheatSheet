@@ -2654,7 +2654,9 @@ class SomeClass {
   * Called immediately before class dealloc
   * deinit keyword, only for class types
   * Not allowed to call a deinit
-  * deinits are inherited and called automatically
+  * deinits are called automatically
+  * Superclass deinit are inherited by their subclasses, and called automatically at the end of a subclass deinit implementation.
+  * Superclass deinit are always called, even if a subclass does not provide its own deinitializer.
 
   ```swift
   class Player {
