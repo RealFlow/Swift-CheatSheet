@@ -2677,7 +2677,7 @@ class SomeClass {
   
   * Two Solutions:
     * Weak references
-      * Use weak when the other instance has a shorter lifetime, that is when the other instance deallocates first
+      * Use weak when the other instance can be deallocated first
     * Unowned references
       * Use unowned when the other instance has the same or longer lifetime.
   * Weak References
@@ -2757,7 +2757,7 @@ class SomeClass {
 
   * Can occur captures self creating a strong reference cycle
   * Solution to use a "closure capture list"
-  * Declare captured reference to be a weak or unknown reference
+  * Declare captured reference to be a weak or unknown reference. Place the capture list before a closure’s parameter list and return type
     ```swift
     lazy var someClosure: (Int, String) -> String = {
       [unowned self, weak delegate = self.delegate!] (index: Int, stringToProcess: String) -> String in
