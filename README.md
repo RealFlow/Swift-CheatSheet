@@ -1884,8 +1884,10 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     * When an instance of a Value type (i.e Structure) is marked as a constant, so are all of its properties, but not true for classes.
 
       ```swift
-      let someStruct = SomeStruct(x: 0, y: 0)
-      someStruct.x = 12 // compile-error
+      let rangeOfFourItems = FixedLengthRange(firstValue: 0, length: 4)
+      // this range represents integer values 0, 1, 2, and 3
+      rangeOfFourItems.firstValue = 6
+      // this will report an error, even though firstValue is a variable property
       ```
 
   * Lazy Stored Properties
@@ -2006,10 +2008,12 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * Computing and Observable capabilities are for both Global and Local properties
   * Global variables are defined outside any function, method, closure or type context
   * Global constants and variables are always computed lazily, similar to Lazy Stored Properties
+  * Global constants and variables do not need to be marked with 'lazy' modifier
   * Local constants and variables are never computed lazily
 
 ### Type Properties
 
+  * Type properties belong to the type itself, not to any one instance of that type. They are useful for defining values that are universal to all instances of a particular type, such as a constant property.
   * For Structures and enumerations (value types), you can define stored and computed type properties,
   * For Classes, you can define computed type properties only
   * Stored type properties for value types can be variables or constants.
@@ -2023,20 +2027,23 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
         static var storedTypeProperty = "Some value."
         static var computedTypeProperty: Int {
-            // return an Int value here
+            return 1
         }
       }
 
       enum SomeEnumeration {
         static var storedTypeProperty = "Some value."
         static var computedTypeProperty: Int {
-            // return an Int value here
+            return 6
         }
       }
 
       class SomeClass {
-        class var computedTypeProperty: Int {
-            // return an Int value here
+        static var computedTypeProperty: Int {
+            return 27
+        }
+        class var overrideableComputedTypeProperty: Int {
+            return 107
         }
       }
       ```
