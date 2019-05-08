@@ -1826,7 +1826,12 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
     * Value types do not need dynamic memory allocation or reference counting, both of which are expensive operations. At the same time methods on value types are dispatched statically. These create a huge advantage in favor of value types in terms of performance.
 
-  * Use Classes When You Need Objective-C Interoperability
+  * Use Classes When You Need Objective-C Interoperability.
+    * Remember you can’t subclass Swift classes in Objective-C.
+    * Remember you can subclass Objective-C classes in Swift, and also adopt Objective-C protocols.
+    * Remember to use the **@objc(name)** attribute to provide Objective-C names for properties and methods when necessary.
+    * Remember to denote instance (-) and class (+) methods with **func** and **class func**, respectively.
+    * Remember to declare simple macros as global constants, and translate complex macros into functions.
 
   * Use Classes When You Need to Control Identity
   Classes in Swift are reference types. This means that when two different class instances have the same value for each of their stored properties, they're still considered to be different by the identity operator (===).
