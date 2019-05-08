@@ -1735,19 +1735,22 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * Class is Refence Type
   * Structure (and Enumeration) are Value Type
   * Swift does not require you to create separate interface implementation files for custom classes and structures
+  * Thread safe:
+  When you pass a class object around your program, you are actually passing a reference to that object, so different parts of your program can share and modify your object. When you pass a structure (or enum), what gets passed around is a copy of the structure. So modifications to structures don’t get shared.
+  **One of the major benefits of value types is that they are thread-safe not requiring any synchronization.**
 
 ### Comparing Classes and Structures
 
   * Things in common
     * Define properties
     * Define methods
-    * Define subscripts
+    * Define subscripts (provide access to their values using subscript syntax)
     * Define initializers
-    * Extended to expand their functionality
+    * Be extended
     * Conform to protocols
-  * Classes have additional capabilities that structures do not:
+  * Classes have additional capabilities that structures don't have:
     * Inheritance
-    * Type casting
+    * Type casting (interpret the type of a class instance at runtime)
     * Deinitializers
     * Reference counting allows more than one reference to a class instance
   * Definition Syntax
@@ -1808,15 +1811,34 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Choosing Between Classes and Structures
 
-  * Consider structure if:
-    * Primary purpose is to encapsulate a few relatively simple data values
-    * Expect that the encapsulated values are copied rather than referenced
-    * Any properties stored are of value type
-    * Does not need any inheritance
-  * Examples of structures
-    * Size of a geometric shape, with width, height properties, both of type Double
-    * A way to refer ranges within a series perhaps encapsulating a start and length properties, both of type Int
-    * A point in a 3D coordinate system, perhaps encapsulating, x, y, z properties, of type Double
+  * Main recommendations
+    * Use structures by default.
+    * Use classes when you need Objective-C interoperability.
+    * Use classes when you need to control the identity of the data you're modeling.
+    * Use structures along with protocols to adopt behavior by sharing implementations.
+
+  * Choose Structures by Default. Choose Classes if the Struct becomes very large or requires inheritance.
+    * Structs are much safer and bug-free, especially in a multithreaded environment. Swift value types are kept in the stack. In a process, each thread has its own stack space, so no other thread will be able to access your value type directly. Hence no race conditions, locks, deadlocks or any related thread synchronization complexity.
+
+    * Even though struct and enum don’t support inheritance, they are great for protocol-oriented programming. A subclass inherits all the required and unwanted functionalities from the superclass and is a bad programming practice. Better to use a struct with protocol-oriented programming concept which fixes the above-said issue.
+
+    * Class does support Inheritance. Class is a reference type and is stored in the heap part of memory which makes a class comparatively slower than a struct in terms of performance. Unlike a class, a struct is created on the stack. So, it is faster to instantiate (and destroy) a struct than a class. Unless struct is a class member in which case it is allocated in heap, along with everything else.
+
+    * Value types do not need dynamic memory allocation or reference counting, both of which are expensive operations. At the same time methods on value types are dispatched statically. These create a huge advantage in favor of value types in terms of performance.
+
+  * Use Classes When You Need Objective-C Interoperability
+
+  * Use Classes When You Need to Control Identity
+  Classes in Swift are reference types. This means that when two different class instances have the same value for each of their stored properties, they're still considered to be different by the identity operator (===).
+
+  * Use Structures When You Don't Control Identity
+  Use structures when you're modeling data that contains information about an entity with an identity that you don't control.
+
+  * Use Structures and Protocols to Model Inheritance and Share Behavior
+  Structures and classes both support a form of inheritance. Structures and protocols can only adopt protocols; they can't inherit from classes. However, the kinds of inheritance hierarchies you can build with class inheritance can be also modeled using protocol inheritance and structures.
+
+  If you're building an inheritance relationship from scratch, prefer protocol inheritance. Protocols permit classes, structures, and enumerations to participate in inheritance, while class inheritance is only compatible with other classes. When you're choosing how to model your data, try building the hierarchy of data types using protocol inheritance first, then adopt those protocols in your structures.
+
 
 ### Assignment and Copy Behavior for Strings, Arrays, and Dictionaries
 
@@ -3780,4 +3802,3 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 * [Swift - Apple Developer](https://developer.apple.com/swift/)
 
 [Back to top](#swift-cheatsheet)
-
