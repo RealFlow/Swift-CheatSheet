@@ -2396,7 +2396,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     }
     ```
   * Stored Constant Properties
-    * Can only be modified during initialisation
+    * Can only be modified during init
     * Can only be modified in class init, not sub-class init.
 
   * Optional Property Types
@@ -2440,6 +2440,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     ```
 
   * Memberwise Initialisers for Structure Types
+    * Structure and Enumeration have initializers methods, same as Classes
     * Structure types automatically receive a member wise initialiser if there is no custom initialisers
     * Memberwise initializer is a shorthand way to initialise the member properties of new structure instances
     * Initial values can be passed to the init by name
@@ -2492,38 +2493,45 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       * Init all properties in that class and calls its superclass chain inits
       * Quite common to have only one
     * Convenience inits, secondary support inits
-  * Syntax for Designated and Convenienc initialisers
+  * Syntax for Designated and Convenience initialisers
     ```swift
     init ([parameters]) { ... }
     convenience init([parameters]) { ... }
     ```
 
-  * Init Chaining
+  * Initializer Delegation for Class Types
     * Rules to simply relationship between designated & convenience inits
-      1. Designated init must call a designated init from its immediate class
-      2. Convenience init must call another init from the same class
-      3. Convenience init must ultimately call a designated init
+      Rule 1. Designated init must call a designated init from its immediate class
+      Rule 2. Convenience init must call another init from the same class
+      Rule 3. Convenience init must ultimately call a designated init
     
       * Designated init delegates up
       * Convenience init delegates across
 
       <img src="resources/initializerDelegation02_2x.png" width="500" height="496">
     
-  * Init Two-Phase
+  * Two-Phase Initialization
+
+  The use of a two-phase initialization process makes initialization safe, while still giving complete flexibility to each class in a class hierarchy. Two-phase initialization prevents property values from being accessed before they are initialized, and prevents property values from being set to a different value by another initializer unexpectedly.
+
     * Phase 1
-      * Each stored property is assigned an initial value (Objc-C assigns zero or null values)
+      * A designated or convenience initializer is called on a class.
+      * Memory for a new instance of that class is allocated. The memory is not yet initialized.
+      * A designated initializer for that class confirms that all stored properties introduced by that class have a value. The memory for these stored properties is now initialized.
+      * The designated initializer hands off to a superclass initializer to perform the same task for its own stored properties.
+      * This continues up the class inheritance chain until the top of the chain is reached.
+      * Once the top of the chain is reached, and the final class in the chain has ensured that all of its stored properties have a value, the instance’s memory is considered to be fully initialized, and phase 1 is complete.
     * Phase 2
-      * Each class is given the opportunity to customise its stored properties further before new instance is ready to use
+      * Working back down from the top of the chain, each designated initializer in the chain has the option to customize the instance further. Initializers are now able to access self and can modify its properties, call its instance methods, and so on.
+      * Finally, any convenience initializers in the chain have the option to customize the instance and to work with self.
     
     * Safety checks:
-      1. A designated init must sensor that all the properties introduced by its class are initialised before it delegates up to a superclass init
-      2. A designated init must delegate up to a superclass init before assigning a value to an inherited property
-      3. A convenience init must delegate to another init before assigning a value to any property.
-      4. An init cannot:
-        * call instances methods 
-        * access instance properties
+      1. A designated initializer must ensure that all of the properties introduced by its class are initialized before it delegates up to a superclass initializer.
+      2. A designated initializer must delegate up to a superclass initializer before assigning a value to an inherited property. If it doesn’t, the new value the designated initializer assigns will be overwritten by the superclass as part of its own initialization.
+      3. A convenience initializer must delegate to another initializer before assigning a value to any property (including properties defined by the same class). If it doesn’t, the new value the convenience initializer assigns will be overwritten by its own class’s designated initializer.
+      4. An initializer cannot call any instance methods, read the values of any instance properties, or refer to self as a value until after the first phase of initialization is complete.
   
-  * Init Inheritance and Overriding
+  * Initializers Inheritance and Overriding
     * **Swift subclass do not inherit their superclass init by default**
     * If any subclass initializer matches a superclass initializer, "override" modifier is required.
     * If you write subclass init that matches superclass convenience init, superclass convenience init can never be called directly by your subclass, as described in 
@@ -2538,14 +2546,25 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
             numberOfWheels = 2
         }
       }
+
+      class Hoverboard: Vehicle {
+      var color: String
+      init(color: String) {
+        self.color = color
+        // super.init() implicitly called here
+        }
+        override var description: String {
+          return "\(super.description) in a beautiful \(color)"
+        }
+      }
       ```
 
     * Subclasses can modify inherited variable properties during initialization
     * Subclasses cannot modify inherited constants properties during initialization
 
-  * Automatic Init Inheritance
-    * If your subclass does not define any designated inits, it automatically **inherits all its superclass initializers**
-    * If your subclass provides an implementation of all its superclass designated initialisers (either by inheriting them or by custom implementation), it automatically inherits all of the superclass convenience inits
+  * Automatic Initializers Inheritance
+    Rule 1* If your subclass does not define any designated inits, it automatically **inherits all its superclass initializers**
+    Rule 2* If your subclass provides an implementation of all its superclass designated initialisers (either by inheriting them or by custom implementation), it automatically inherits all of the superclass convenience inits
     * A subclass can implement a superclass designated init as subclass convenience init
   * Designated and Convenience Example
     ```swift
@@ -2576,8 +2595,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     ```
     <img src="resources/initializersExample03_2x.png" width="500" height="452">
 
-  * Failable Inits
-    * A failable initializer creates an optional value of the type it initializes
+  * Failable Initializers
+    * A failable initializer (***init?*) creates an optional value of the type it initializes
     * return nil
       ```swift
       struct Animal {
