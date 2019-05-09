@@ -2608,7 +2608,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     <img src="resources/initializersExample03_2x.png" width="500" height="452">
 
   * Failable Initializers
-    * A failable initializer (***init?*) creates an optional value of the type it initializes
+    * A failable initializer **init?** creates an optional value of the type it initializes
     * return nil
       ```swift
       struct Animal {
