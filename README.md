@@ -3195,7 +3195,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 }
 ```
 
-### Protocol Requirements
+### Property Requirements
 
   * Getter & setter requirements
 
@@ -3218,7 +3218,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
   * Allowed Variadic parameters
   * Not allowed Default values
-  * If you mark a protocol instance method requirements as mutating, you do not need to write the mutating keyword when writing an implementation of that method for a class. Mutating only used by structures and enumerations
+  * If you mark a protocol instance method requirements as mutating, you do not need to write the mutating keyword when writing an implementation of that method for a class. Mutating only used on value types (i.e. structures and enumerations)
     ```swift
     protocol SomeProtocol {
         func random() -> Double
@@ -3229,8 +3229,12 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
 ### Initializer Requirements
   * Class implementations of Protocol initialisers requirements
-    * Use "required" modifier for both designated and convenience inits:
+    * Use **required** modifier for both designated and convenience inits:
       ```swift
+      protocol SomeProtocol {
+        init(someParameter: Int)
+      }
+
       class SomeClass: SomeProtocol {
         required init(someParameter: Int) {
           // initializer implementation goes here
@@ -3261,8 +3265,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
 ### Protocols as Types
 
-  * Protocol you create will become a fully-fledged type for use in your code
-  * Thus, you can use protocol in many places, including:
+  * You can use protocol in many places, including:
     * As a parameter type or return type in a function, method or init
     * As a type of a constant, variable or property
     * As a type of items in an array, dictionary or other container
@@ -3377,8 +3380,11 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
       }
 
       extension Hamster: TextRepresentable {}
+
       let simonTheHamster = Hamster(name: "Simon")
-      let somethingTextRepresentable: TextRepresentable = simonTheHamster"
+      let somethingTextRepresentable: TextRepresentable = simonTheHamster
+      print(somethingTextRepresentable.textualDescription)
+      // Prints "A hamster named Simon"
       ```
 
     * Note
@@ -3448,8 +3454,8 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
 ### Protocol Conformance
   * is operator returns true if an instance conforms to a protocol and returns false if it does not.
-  * as? returns an optional value of the protocol’s type, and this value is nil if the instance does not conform to that protocol.
-  * as! forces the downcast to the protocol type and triggers a runtime error if the downcast does not succeed.
+  * **as?** returns an optional value of the protocol’s type, and this value is nil if the instance does not conform to that protocol.
+  * **as!** forces the downcast to the protocol type and triggers a runtime error if the downcast does not succeed.
     ```swift
     protocol HasArea {
       var area: Double { get }
