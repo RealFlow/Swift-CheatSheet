@@ -33,7 +33,6 @@ Notes taken from [The Swift Programming Language](https://developer.apple.com/li
 - [Attributes](#attributes)
 - [Advanced Operators](#advanced-operators)
 
-\pagebreak
 
 ## The Basics
 
