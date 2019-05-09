@@ -3505,6 +3505,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 ### Generic Functions
 
   ```swift
+  // inout means that modifying the local variable will also modify the passed-in parameters.
   func swapTwoValues<T>(inout a: T, inout b: T) {
       let temporaryA = a
       a = b
@@ -3526,8 +3527,8 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * Once you specify the type parameter, you can use it to define the type of a function's parameter, function's return type and or as a type annotation within the body of the function
     * You can provide more than one type parameter by writing type parameter name within the angle bracket.
   * Naming Type Parameters
-    * Traditional to use single-character name T, but you can use any valid identifier for the type parameter name with Capital letter
-    * Allowed generic types with multiple parameters (Dictionary uses KeyType and ValueType)
+    * Traditional to use single-character name **T**, but you can use any valid identifier for the type parameter name with Capital letter (Array<Element>)
+    * Allowed generic types with multiple parameters (Dictionary<Key, Value>)
   * Custom classes, structures, and enumerations that can work with any type, similar to Array and Dictionary
 
   
@@ -3538,8 +3539,9 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   * The original type parameter names are used to refer to the type parameters of the original definition
 
     ```swift
-    extension Stack { // Stack is an structure
-        var topItem: T? {
+    // Stack is an structure
+    extension Stack {
+        var topItem: Element? {
             return items.isEmpty ? nil: items[items.count - 1]
         }
     }
@@ -3553,50 +3555,47 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
       * Dictionary Keys must be hashable, conform to the Hashable protocol
     
   * Type Constraint Syntax
-
     ```swift
+    // Function has two type parameters. 
+    // The first type parameter, T, has a type constraint that requires T to be a subclass of SomeClass. 
+    // The second type parameter, U, has a type constraint that requires U to conform to the protocol SomeProtocol.
+
     func someFunction<T: SomeClass, U: SomeProtocol>(someT: T, someU: U) {
         // function body goes here
     }
-    ```
 
-  * Type Constraints in Action
-    * Type specific version
+    // ----------------
 
-      ```swift
-      func findStringIndex(array: [String], valueToFind: String) -> Int? {
-        for (index, value) in enumerate(array) {
-            if value == valueToFind {
-                return index
-            }
-        }
-        return nil
-      }
-
-      * Generic version
-
-        ```swift
-        func findIndex<T: Equatable>(array: [T], valueToFind: T) -> Int? {
-          for (index, value) in enumerate(array) {
-              if value == valueToFind {
-                  return index
-              }
+    func findStringIndex(array: [String], valueToFind: String) -> Int? {
+      for (index, value) in enumerate(array) {
+          if value == valueToFind {
+              return index
           }
-          return nil
-        }
-        ```
+      }
+      return nil
+    }
+
+    func findIndex<T: Equatable>(array: [T], valueToFind: T) -> Int? {
+      for (index, value) in enumerate(array) {
+          if value == valueToFind {
+              return index
+          }
+      }
+      return nil
+    }
+    ```
 
 ### Associated Types
 
   * Overview
     * When defining a protocol, sometimes, it is useful to declare one or more associated types as part of the protocol's definition.
-    * Gives a placeholder name (alias) to a type that is used as part of the protocol
+    * **typealiase** gives a placeholder name to a type that is used as part of the protocol
     * Actual type to use for the associated type is not specified until the protocol is adopted
     ```swift
+    // Container protocol declares ItemType associated type
     protocol Container {
       typealias ItemType
-      mutating func append(item: ItemType)
-
+      mutating func append(_ item: ItemType)
       var count: Int { get }
       subscript(i: Int) -> ItemType { get }
     }
@@ -3613,6 +3612,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
         }
 
         // conformance to the Container protocol
+        // NOTE: Sometimes there's no need to define the ItemType since It can be inferred from other method (i.e. append)
         typealias ItemType = Int
         mutating func append(item: Int) {
             self.push(item)
@@ -3630,13 +3630,14 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 ### Using Type Annotations to Constrain an Associated Type
 
   * Add a type annotation to an associated type in a protocol, to require that conforming types satisfy the constraints described by the type annotation.
+  * Uses **associatedtype**
 
   ```swift
   protocol Container {
-      associatedtype Item: Equatable
-      mutating func append(_ item: Item)
+      associatedtype ItemType: Equatable
+      mutating func append(_ item: ItemType)
       var count: Int { get }
-      subscript(i: Int) -> Item { get }
+      subscript(i: Int) -> ItemType { get }
   }
   ```
 
@@ -3646,8 +3647,9 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   * Define where clauses as part of a type parameter list
   * Where clause allows you to require that an associated type conforms to a certain protocol **and/or** certain taupe parameters an associated types to be the same
     ```swift
-    func allItemsMatch<C1: Container, C2: Container where C1.ItemType == C2.ItemType, C1.ItemType: Equatable> (someContainer: C1, anotherContainer: C2) -> Bool {
-        // ...
+    protocol SuffixableContainer: Container {
+    associatedtype Suffix: SuffixableContainer where Suffix.ItemType == ItemType
+    func suffix(_ size: Int) -> Suffix
     }
     ```
 
@@ -3658,6 +3660,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   }
 
   struct NotEquatable { }
+
   var notEquatableStack = Stack<NotEquatable>()
   let notEquatableValue = NotEquatable()
   notEquatableStack.push(notEquatableValue)
@@ -3667,12 +3670,12 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 ### Where Clause in Associated Types
   ```swift
   protocol Container {
-      associatedtype Item
-      mutating func append(_ item: Item)
+      associatedtype ItemType
+      mutating func append(_ item: ItemType)
       var count: Int { get }
-      subscript(i: Int) -> Item { get }
+      subscript(i: Int) -> ItemType { get }
       
-      associatedtype Iterator: IteratorProtocol where Iterator.Element == Item
+      associatedtype Iterator: IteratorProtocol where Iterator.Element == ItemType
       func makeIterator() -> Iterator
   }
   ```
@@ -3680,7 +3683,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 ### Generic Subscripts
   ```swift
   extension Container {
-      subscript<Indices: Sequence>(indices: Indices) -> [Item]
+      subscript<Indices: Sequence>(indices: Indices) -> [ItemType]
           where Indices.Iterator.Element == Int {
               var result = [Item]()
               for index in indices {
