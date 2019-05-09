@@ -2880,13 +2880,16 @@ class SomeClass {
 ### Handling Errors
 There are four ways to handle errors
   * 1. Propagate the Error using throwing
-
     ```swift
     // throws error 
     func vend(itemNamed name: String) throws {
         guard let item = inventory[name] else {
             throw VendingMachineError.invalidSelection
         }
+
+        guard item.count > 0 else {
+            throw VendingMachineError.outOfStock
+        } 
         
         // rest of code
     }
@@ -2908,10 +2911,18 @@ There are four ways to handle errors
     } catch VendingMachineError.insufficientFunds(let coinsNeeded) {
         print("Insufficient funds. Please insert an additional \(coinsNeeded) coins.")
     }
+
+    func nourish(with item: String) throws {
+      do {
+        try vendingMachine.vend(itemNamed: item)
+      } catch is VendingMachineError {
+        print("Invalid selection, out of stock, or not enough money.")
+      }
+    }
     ```
 
   * 3. Converting Errors to Optionals
-    * use "try?" to convert an Error to an Optional value. If an Error is thrown, the value of the expression is nil.
+    * use **try?** to convert an Error to an Optional value. If an Error is thrown, the value of the expression is nil.
     ```swift
     func someThrowingFunction() throws -> Int {
       // ...
@@ -2944,7 +2955,7 @@ There are four ways to handle errors
         while let line = try file.readline() {
             // Work with the file.
         }
-        // close(file) is called here, at the end of the scope.
+        // <-- close(file) is called here, at the end of the scope.
     }
   }
   ```
