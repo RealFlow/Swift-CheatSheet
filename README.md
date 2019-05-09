@@ -3736,6 +3736,10 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * Public access, as you are building public facing interface API (Façade)
     * Any internal implementation details can still be internal or private.
 
+  * **Access Levels for Unit Test Targets**
+    * By default, only entities marked as open or public are accessible. 
+    * However, a unit test target can access any internal entity, if the import declaration for a product module has the @testable attribute.
+
 ### Access Control Syntax
 
   * Syntax
