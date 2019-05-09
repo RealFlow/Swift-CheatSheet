@@ -2966,15 +2966,15 @@ There are four ways to handle errors
 
 ### Overview
 
-  * A way to check the type of an instance or
-  * To treat that instance as if it is a different superclass/subclass from somewhere else in its own hierarchy
-  * Implemented with "**is**" and "**as**" operators.
+  * A way to check the type of an instance.
+  * A way to to treat that instance as if it is a different superclass/subclass from somewhere else in its own hierarchy
+  * Implemented with **is** and **as** operators.
     * To check the type of a value or cast a value to a different type
   * Also used to check whether a type conforms to a protocol
 
 ### Checking Type
 
-  * Use type check operator (is) to check whether an instance is a certain subclass type
+  * **is**: checks whether an instance is a certain subclass type
 
     ```swift
     var movieCount = 0
@@ -2991,10 +2991,10 @@ There are four ways to handle errors
 
 ### Downcasting
 
-  * Downcast a subclass type with type operator (as)
+  * Downcast a subclass type with type operator **as**
     * Downcasting can fail, there are two types:
-      * as? returns optional value
-      * as, attempts to downcast and force-unwraps result as a single compound action
+      * **as?**: returns optional value
+      * **as**: attempts to downcast and force-unwraps result as a single compound action
 
     ```swift
     for item in library {
@@ -3009,8 +3009,8 @@ There are four ways to handle errors
 ### Type Casting for Any and AnyObject
 
   * Swift provide two special type for working with non-specific types
-    * Any: represents an instance of any type at all, including function types.
-    * AnyObject: represents an instance of any class type.
+    * **Any**: represents an instance of any type at all, including function types.
+    * **AnyObject**: represents an instance of any class type.
     ```swift
     var things = [Any]()
 
