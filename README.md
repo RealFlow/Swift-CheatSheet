@@ -30,6 +30,7 @@ Notes taken from [The Swift Programming Language](https://developer.apple.com/li
 - [Generics](#generics)
 - [Automatic Reference Counting](#automatic-reference-counting)
 - [Access Control](#access-control)
+- [Attributes](#attributes)
 - [Advanced Operators](#advanced-operators)
 
 ## The Basics
@@ -3947,6 +3948,48 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * This rule also applies to type aliases for associated types used to satisfy protocol conformances
 
 [Back to top](#swift-cheatsheet)
+
+## Attributes
+  There are two types, applied to Declarations or applied to Types. Uses **@** prefix.
+
+  * Declaration Attributes
+    * **@available** indicates availability to certain Swift language versions or certain platforms and operating system versions.
+    * **@discardableResult** suppress the compiler warning when the function or method that returns a value is called without using its result
+    * **@dynamicCallable** Applied to class, structure, enumeration, or protocol to treat instances of the type as callable functions. The type must implement either 'dynamicallyCall(withArguments:)' or 'dynamicallyCall(withKeywordArguments:)'
+    * **@dynamicMemberLookup** Applied to class, structure, enumeration, or protocol to enable members to be looked up by name at runtime.
+    ```swift
+    @dynamicMemberLookup
+    struct DynamicStruct {
+      let dictionary = ["someDynamicMember": 325,
+                        "someOtherMember": 787]
+      subscript(dynamicMember member: String) -> Int {
+        return dictionary[member] ?? 1054
+      }
+    }
+
+    let s = DynamicStruct()
+
+    // Use dynamic member lookup.
+    let dynamic = s.someDynamicMember
+    print(dynamic)
+    // Prints "325"
+
+    // Call the underlying subscript directly.
+    let equivalent = s[dynamicMember: "someDynamicMember"]
+    print(dynamic == equivalent)
+    // Prints "true"
+    ```
+    * **@nonobjc** Applied to a method, property, subscript, or initializer declaration to suppress an implicit objc attribute.
+    * **@objc** Applied to any declaration that can be represented in ObjC to tell the compiner that is available to be used in ObjC code.
+    * **@objcMembers** Applied to a class declaration, to implicitly apply the objc attribute to all Objective-C compatible members of the class, its extensions, its subclasses, and all of the extensions of its subclasses.
+    * **@testable** Applied to an import declaration to import that module with changes to its access control that simplify testing the module’s code.
+
+  * Type Attributes
+    * **@autoclosure** Applied to delay the evaluation of an expression by automatically wrapping that expression in a closure with no arguments.
+    * **@escaping** Applied to a parameter’s type in a method or function declaration to indicate that the parameter’s value can be stored for later execution. This means that the value is allowed to outlive the lifetime of the call.
+
+[Back to top](#swift-cheatsheet)
+
 
 ## Advanced Operators
 (TO BE COMPLETED)
