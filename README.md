@@ -2526,26 +2526,23 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       <img src="resources/initializerDelegation02_2x.png" width="500" height="496">
     
   * Two-Phase Initialization
-
-  The use of a two-phase initialization process makes initialization safe, while still giving complete flexibility to each class in a class hierarchy. Two-phase initialization prevents property values from being accessed before they are initialized, and prevents property values from being set to a different value by another initializer unexpectedly.
-
-    * Phase 1
-      * A designated or convenience initializer is called on a class.
-      * Memory for a new instance of that class is allocated. The memory is not yet initialized.
-      * A designated initializer for that class confirms that all stored properties introduced by that class have a value. The memory for these stored properties is now initialized.
-      * The designated initializer hands off to a superclass initializer to perform the same task for its own stored properties.
-      * This continues up the class inheritance chain until the top of the chain is reached.
-      * Once the top of the chain is reached, and the final class in the chain has ensured that all of its stored properties have a value, the instance’s memory is considered to be fully initialized, and phase 1 is complete.
-    * Phase 2
-      * Working back down from the top of the chain, each designated initializer in the chain has the option to customize the instance further. Initializers are now able to access self and can modify its properties, call its instance methods, and so on.
-      * Finally, any convenience initializers in the chain have the option to customize the instance and to work with self.
-    
-    * Safety checks:
-      1. A designated initializer must ensure that all of the properties introduced by its class are initialized before it delegates up to a superclass initializer.
-      2. A designated initializer must delegate up to a superclass initializer before assigning a value to an inherited property. If it doesn’t, the new value the designated initializer assigns will be overwritten by the superclass as part of its own initialization.
-      3. A convenience initializer must delegate to another initializer before assigning a value to any property (including properties defined by the same class). If it doesn’t, the new value the convenience initializer assigns will be overwritten by its own class’s designated initializer.
-      4. An initializer cannot call any instance methods, read the values of any instance properties, or refer to self as a value until after the first phase of initialization is complete.
+    * The use of a two-phase initialization process makes initialization safe, while still giving complete flexibility to each class in a class hierarchy. Two-phase initialization prevents property values from being accessed before they are initialized, and prevents property values from being set to a different value by another initializer unexpectedly.
   
+  * Phase 1
+    * A designated or convenience initializer is called on a class.
+    * Memory for a new instance of that class is allocated. The memory is not yet initialized.
+    * A designated initializer for that class confirms that all stored properties introduced by that class have a value. The memory for these stored properties is now initialized.
+    * The designated initializer hands off to a superclass initializer to perform the same task for its own stored properties.
+    * This continues up the class inheritance chain until the top of the chain is reached.
+    * Once the top of the chain is reached, and the final class in the chain has ensured that all of its stored properties have a value, the instance’s memory is considered to be fully initialized, and phase 1 is complete.
+  * Phase 2
+    * Working back down from the top of the chain, each designated initializer in the chain has the option to customize the instance further. Initializers are now able to access self and can modify its properties, call its instance methods, and so on.
+    * Finally, any convenience initializers in the chain have the option to customize the instance and to work with self.
+  * Safety checks:
+    * 1. A designated initializer must ensure that all of the properties introduced by its class are initialized before it delegates up to a superclass initializer.
+    * 2. A designated initializer must delegate up to a superclass initializer before assigning a value to an inherited property. If it doesn’t, the new value the designated initializer assigns will be overwritten by the superclass as part of its own initialization.
+    * 3. A convenience initializer must delegate to another initializer before assigning a value to any property (including properties defined by the same class). If it doesn’t, the new value the convenience initializer assigns will be overwritten by its own class’s designated initializer.
+    * 4. An initializer cannot call any instance methods, read the values of any instance properties, or refer to self as a value until after the first phase of initialization is complete.
   * Initializers Inheritance and Overriding
     * **Swift subclass do not inherit their superclass init by default**
     * If any subclass initializer matches a superclass initializer, "override" modifier is required.
@@ -2578,8 +2575,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     * Subclasses cannot modify inherited constants properties during initialization
 
   * Automatic Initializers Inheritance
-    Rule 1* If your subclass does not define any designated inits, it automatically **inherits all its superclass initializers**
-    Rule 2* If your subclass provides an implementation of all its superclass designated initialisers (either by inheriting them or by custom implementation), it automatically inherits all of the superclass convenience inits
+    * Rule 1: If your subclass does not define any designated inits, it automatically **inherits all its superclass initializers**
+    * Rule 2: If your subclass provides an implementation of all its superclass designated initialisers (either by inheriting them or by custom implementation), it automatically inherits all of the superclass convenience inits
     * A subclass can implement a superclass designated init as subclass convenience init
   * Designated and Convenience Example
     ```swift
@@ -2652,7 +2649,7 @@ class SomeClass {
         // create a default value for someProperty inside this closure
         // someValue must be of the same type as SomeType
         return someValue
-        }**()**
+        } ()
 }
 ```
 
