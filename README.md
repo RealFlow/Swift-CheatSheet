@@ -21,7 +21,6 @@ Notes taken from [The Swift Programming Language](https://developer.apple.com/li
 - [Inheritance](#inheritance)
 - [Initialization](#initialization)
 - [Deinitialization](#deinitialization)
-- [Automatic Reference Counting](#automatic-reference-counting)
 - [Optional Chaining](#optional-chaining)
 - [Error Handling](#error-handling)
 - [Type Casting](#type-casting)
@@ -29,6 +28,7 @@ Notes taken from [The Swift Programming Language](https://developer.apple.com/li
 - [Extensions](#extensions)
 - [Protocols](#protocols)
 - [Generics](#generics)
+- [Automatic Reference Counting](#automatic-reference-counting)
 - [Access Control](#access-control)
 - [Advanced Operators](#advanced-operators)
 
@@ -2681,116 +2681,6 @@ class SomeClass {
   ```
 [Back to top](#swift-cheatsheet)
 
-## Automatic Reference Counting
-
-### Overview
-
-  * ARC only applies to classes, Structures and Enumerations are value types
-
-### Resolving Strong Reference Cycles Between Class Instances
-  
-  * Two Solutions:
-    * Weak references
-      * Use weak when the other instance can be deallocated first
-    * Unowned references
-      * Use unowned when the other instance has the same or longer lifetime.
-  * Weak References
-    * Use "weak"
-    * Optional variable, constant not allowed
-    * ARC will set to nil when it is deallocated
-      ```swift
-      class Person {
-          let name: String
-          init(name: String) { [self.name][2] = name }
-          var apartment: Apartment?
-          deinit { println("\(name) is being deinitialized") }
-      }
-      class Apartment {
-          let number: Int
-          init(number: Int) { self.number = number }
-          weak var tenant: Person?
-          deinit { println("Apartment #\(number) is being deinitialized") }
-      }
-      ```
-  * Unowned References
-    * Use "unowned"
-    * Non-optional variable (must have a value)
-    * ARC cannot set the reference to nil when it is deallocated
-      ```swift
-      class Customer {
-
-        let name: String
-        var card: CreditCard?
-        init(name: String) {
-            [self.name][2] = name
-        }
-        deinit { println("\(name) is being deinitialized") }
-      }
-
-      class CreditCard {
-        let number: UInt64
-        unowned let customer: Customer
-        init(number: UInt64, customer: Customer) {
-            self.number = number
-            self.customer = customer
-        }
-        deinit { println("Card #\(number) is being deinitialized") }
-      }
-      ```
-  * Unowned References and Implicitly Unwrapped Optional Properties
-    * Third scenario which both properties should have a value
-    * Combine unowned property on one class with an implicit unwrapped optional property on the other class
-    * Enables both properties to be accessed directly without optional unwrapping once init is complete, while avoiding reference cycle
-
-      ```swift
-      class Country {
-
-        let name: String
-        let capitalCity: City!
-        init(name: String, capitalName: String) {
-            [self.name][2] = name
-            self.capitalCity = City(name: capitalName, country: self)
-        }
-      }
-
-      class City {
-        let name: String
-        unowned let country: Country
-        init(name: String, country: Country) {
-            [self.name][2] = name
-            self.country = country
-        }
-      }
-
-      var country = Country(name: "Canada", capitalName: "Ottawa")
-      println("\(country.name)'s capital city is called \(country.[capitalCity.name][3])")
-      // prints "Canada's capital city is called Ottawa"
-      ```
-
-### Strong Reference Cycles for Closures
-
-  * Can occur captures self creating a strong reference cycle
-  * Solution to use a "closure capture list"
-  * Declare captured reference to be a weak or unknown reference. Place the capture list before a closure’s parameter list and return type
-    ```swift
-    lazy var someClosure: (Int, String) -> String = {
-      [unowned self, weak delegate = self.delegate!] (index: Int, stringToProcess: String) -> String in
-      // closure body goes here
-    }
-    ```
-    * Or
-    ```swift
-    lazy var someClosure: () -> String = {
-        [unowned self, weak delegate = self.delegate!] in
-        // closure body goes here
-    }
-    ```
-
-  * Unowned reference when the closure and the instance it captures will always refer to each other, and will always be deallocated at the same time.
-  * Weak reference when the the instance it captures may become nil at some point in the future. This enables you to check for their existence within the closure’s body.
-
-[Back to top](#swift-cheatsheet)
-
 ## Optional Chaining
 
 ### Overview
@@ -3693,6 +3583,116 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
       }
   }
   ```
+
+[Back to top](#swift-cheatsheet)
+
+## Automatic Reference Counting
+
+### Overview
+
+  * ARC only applies to classes, Structures and Enumerations are value types
+
+### Resolving Strong Reference Cycles Between Class Instances
+  
+  * Two Solutions:
+    * Weak references
+      * Use weak when the other instance can be deallocated first
+    * Unowned references
+      * Use unowned when the other instance has the same or longer lifetime.
+  * Weak References
+    * Use "weak"
+    * Optional variable, constant not allowed
+    * ARC will set to nil when it is deallocated
+      ```swift
+      class Person {
+          let name: String
+          init(name: String) { [self.name][2] = name }
+          var apartment: Apartment?
+          deinit { println("\(name) is being deinitialized") }
+      }
+      class Apartment {
+          let number: Int
+          init(number: Int) { self.number = number }
+          weak var tenant: Person?
+          deinit { println("Apartment #\(number) is being deinitialized") }
+      }
+      ```
+  * Unowned References
+    * Use "unowned"
+    * Non-optional variable (must have a value)
+    * ARC cannot set the reference to nil when it is deallocated
+      ```swift
+      class Customer {
+
+        let name: String
+        var card: CreditCard?
+        init(name: String) {
+            [self.name][2] = name
+        }
+        deinit { println("\(name) is being deinitialized") }
+      }
+
+      class CreditCard {
+        let number: UInt64
+        unowned let customer: Customer
+        init(number: UInt64, customer: Customer) {
+            self.number = number
+            self.customer = customer
+        }
+        deinit { println("Card #\(number) is being deinitialized") }
+      }
+      ```
+  * Unowned References and Implicitly Unwrapped Optional Properties
+    * Third scenario which both properties should have a value
+    * Combine unowned property on one class with an implicit unwrapped optional property on the other class
+    * Enables both properties to be accessed directly without optional unwrapping once init is complete, while avoiding reference cycle
+
+      ```swift
+      class Country {
+
+        let name: String
+        let capitalCity: City!
+        init(name: String, capitalName: String) {
+            [self.name][2] = name
+            self.capitalCity = City(name: capitalName, country: self)
+        }
+      }
+
+      class City {
+        let name: String
+        unowned let country: Country
+        init(name: String, country: Country) {
+            [self.name][2] = name
+            self.country = country
+        }
+      }
+
+      var country = Country(name: "Canada", capitalName: "Ottawa")
+      println("\(country.name)'s capital city is called \(country.[capitalCity.name][3])")
+      // prints "Canada's capital city is called Ottawa"
+      ```
+
+### Strong Reference Cycles for Closures
+
+  * Can occur captures self creating a strong reference cycle
+  * Solution to use a "closure capture list"
+  * Declare captured reference to be a weak or unknown reference. Place the capture list before a closure’s parameter list and return type
+    ```swift
+    lazy var someClosure: (Int, String) -> String = {
+      [unowned self, weak delegate = self.delegate!] (index: Int, stringToProcess: String) -> String in
+      // closure body goes here
+    }
+    ```
+    * Or
+    ```swift
+    lazy var someClosure: () -> String = {
+        [unowned self, weak delegate = self.delegate!] in
+        // closure body goes here
+    }
+    ```
+
+  * Unowned reference when the closure and the instance it captures will always refer to each other, and will always be deallocated at the same time.
+  * Weak reference when the the instance it captures may become nil at some point in the future. This enables you to check for their existence within the closure’s body.
 
 [Back to top](#swift-cheatsheet)
 
