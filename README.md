@@ -3058,6 +3058,9 @@ There are four ways to handle errors
             }
         }
     }
+
+    let heartsSymbol = BlackjackCard.Suit.hearts.rawValue
+    // heartsSymbol is "♡"
     ```
 
 [Back to top](#swift-cheatsheet)
@@ -3067,12 +3070,12 @@ There are four ways to handle errors
 ### Overview
 
   * Add new functionality to existing class, structure or enumeration type
-  * Extensions can add new functionality, but can not override existing functionality
+  * Extensions can add new functionality, but cannot override existing one
   * Extend types for which you do not have access to the original source code (retroactive modelling)
-  * Extension similar to categories in Obj-C, except it does not have names.
+  * Extensions are similar to categories in Obj-C (Swift ones does not have names).
   * Extensions in Swift can:
-    * Define computed properties and computed static properties. Cannot define stored properties or add property observers to existing properties
-    * Define instance and type methods
+    * Define computed instance properties and computed type properties.
+    * Define instance methods and type methods.
     * Define convenience initialisers but they cannot add new designated initialisers or deinitializers
     * Define subscripts
     * Define and use new nested types
@@ -3092,6 +3095,80 @@ extension SomeType: SomeProtocol, AnotherProtocol {
 ```
   * If you define an extension, the new functionality will be available to all instances, even if they were created before the extension was defined.
 
+### Computed Properties
+
+```swift
+// examples with read-only without get for brevity
+extension Double {
+  var km: Double { return self * 1_000.0 }
+  var m: Double { return self }
+  var cm: Double { return self / 100.0 }
+  var mm: Double { return self / 1_000.0 }
+  var ft: Double { return self / 3.28084 }
+}
+```
+
+### Initializers
+
+```swift
+extension Rect {
+  init(center: Point, size: Size) {
+    let originX = center.x - (size.width / 2)
+    let originY = center.y - (size.height / 2)
+    self.init(origin: Point(x: originX, y: originY), size: size)
+  }
+}
+```
+
+### Methods
+
+```swift
+extension Int {
+  func repetitions(task: () -> Void) {
+    for _ in 0..<self {
+      task()
+    }
+  }
+
+  mutating func square() {
+    self = self * self
+  }
+}
+```
+
+### Subscripts
+
+```swift
+extension Int {
+  subscript(digitIndex: Int) -> Int {
+    var decimalBase = 1
+    for _ in 0..<digitIndex {
+      decimalBase *= 10
+    }
+    return (self / decimalBase) % 10
+  }
+}
+```
+
+### Nested Types
+
+```swift
+extension Int {
+  enum Kind {
+    case negative, zero, positive
+  }
+  var kind: Kind {
+    switch self {
+      case 0:
+        return .zero
+      case let x where x > 0:
+        return .positive
+      default:
+        return .negative
+    }
+  }
+}
+```
 
 [Back to top](#swift-cheatsheet)
 
