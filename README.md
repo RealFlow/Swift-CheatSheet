@@ -98,13 +98,13 @@ let cat="hello"; println(cat)
     let maxValue = UInt8.max // 255
     ```
 
-  * Int
+  * **Int**
     * If you don't need specific size, use Int, same size with current platform's native word size
       * 32-bit platform, Int = Int32
       * 64-bit platform, Int = Int64
     * Unless you need to use specific size, always use Int, for codes consistency and interoperability.
     * On 32-bit platform Int values: -2,147,483,648 => 2,147,483,648, large enough
-  * UInt
+  * **UInt**
     * When you specifically need unsigned integer, else Int is preferred
     * A consistent use of Int aids code interoperability, avoids the need to convert to different number types, matches integer type inference as described in Type Safety and Type Inference
 
@@ -114,10 +114,10 @@ let cat="hello"; println(cat)
   * Represent a much wider range of values than integer types
   * Can store numbers much larger/smaller than can be stored in an Int
   * Types:
-    * Double
+    * **Double**
       * 64-bit floating point number
         * Use it when floating-point values must be very large or particularly precise
-    * Float
+    * **Float**
       * 32-bit floating point number
         * Use it when floating point values do not require 64-bit precision
   * Double has a precision of at least 15 decimal digits, and Float 6 decimal digits
@@ -230,7 +230,7 @@ let cat="hello"; println(cat)
 
 ### Booleans
 
-  * Bool
+  * **Bool**
     ```swift
     let orangesAreOrange = true
     ```
@@ -261,7 +261,7 @@ let cat="hello"; println(cat)
     * If data structure likely to persist beyond a temp scope, model it as a class or structure.
 
 ### Optionals
-
+  * Use **?**
   * Use optional where a value may be present
   * If there is a value, it equals to x, or there isn't a value at all
   * Note
@@ -313,6 +313,7 @@ let cat="hello"; println(cat)
       ```
 
   * Implicitly Unwrapped Optionals
+    * Use **!**
     * Sometimes it is clear that an optional will always have a value
     * To remove the need to check and unwrap optional's value every time it is accessed
       ```swift
@@ -485,16 +486,16 @@ a ? b : c
     ("blue", false) < ("purple", true)  // Error because < can't compare Boolean values
     ```
 
-  * Swift also provides two identity operators === and !==
+  * Swift also provides two identity operators **===** and **!==**
     * Test two object references both refer to the same object instance
 
 ### Ternary Conditional Operator
 
-  * question ? answer1 : answer2
+  * **question ? answer1 : answer2**
 
 ### Nil Coalescing Operator
 
-  * a ?? b
+  * **a ?? b**
   * Unwraps an optional a if it contains a value or returns a default value b if a is nil
   * a is always an optional type
   * Shorthand for
@@ -505,13 +506,14 @@ a ? b : c
 ### Range Operators
 
   * Closed Range Operator
-    * a...b
+    * **a...b**
     * Defines a range that runs from a to be, and includes the values of a and b
     ```swift
     for index in 1...5 { ... }
     ```
 
   * Half-Open Range Operator
+    * **a..<b**
     ```swift
     a..<b
     ```
@@ -526,7 +528,7 @@ a ? b : c
       }
       ```
   * One-Sided Range Operator
-    * [x...y]
+    * **[x...y]**
     * Continues as far as possible in one direction -for example, a range that includes all the elements of an array
     ```swift
     for name in names[2...] { ... }  // closed 
@@ -815,7 +817,7 @@ let newString = String(beginning)
 ## Collection Types
 
 ### Overview
-  * Value types (copied when passed)
+  * **Value types (copied when passed)**
   * Arrays, Sets and Dictionaries
   * Arrays and dictionaries in Swift are always clear about the types of values and keys that they can store.
   * You cannot insert a value of the wrong type
@@ -832,7 +834,7 @@ let newString = String(beginning)
     * Swift's Array differ from Objective-C's NSArray or NSMutableArray which can store any kind of object
     * In Swift, the type of values is always made clear, explicitly or through type inference
   * Array Type Shorthand Syntax
-    * **Array<SomeType> or [SomeType] (preferred)**
+    * **Array<SomeType>** or **[SomeType]** (preferred)
   * Array Creation
     * Literals
     ```swift
@@ -936,7 +938,7 @@ let newString = String(beginning)
   * Overview
     * Swift dictionaries are specific about the types of keys and values
   * Dictionary Type Shorthand Syntax
-    * **Dictionary<KeyType, ValueType> or [KeyType: ValueType]** (preferred)
+    * **Dictionary<KeyType, ValueType>** or **[KeyType: ValueType]** (preferred)
   * Dictionary Literals
     ```swift
     [key 1: value 1, key 2: value 2, key 3: value 3]
@@ -994,7 +996,7 @@ let newString = String(beginning)
 
 ### For Loops
 
-  * For-In
+  * **For-In**
     * Index is only within the scope of the loop
       ```swift
       for index in 1...5 {
@@ -1018,7 +1020,7 @@ let newString = String(beginning)
       for char in "hello" { ... }
       ```
 
-  * For
+  * **For**
     ```swift
     for var i = 0; i < 3; ++i { ... }
     ```
@@ -1026,12 +1028,12 @@ let newString = String(beginning)
 
 ### While Loops
 
-  * While
+  * **While**
     ```swift
     while [cond] { ... }
     ```
 
-  * Repeat-While
+  * **Repeat-While**
     ```swift
     repeat { ... } while [cond]
     ```
@@ -1039,14 +1041,14 @@ let newString = String(beginning)
 
 ### Conditional Statements
 
-  * If
+  * **If**
     ```swift
     if [cond] { ... }
     if [cond] { ... } else { ... }
     if [cond] { ... } else if [cond] { ...  }
     ```
 
-  * Switch
+  * **Switch**
     ```swift
     let anotherCharacter: Character = "a"
     switch anotherCharacter {
@@ -1120,7 +1122,7 @@ let newString = String(beginning)
       ```
 
     * Note that on this case the default statement is not required, cause every possible case as been catered for
-  * Where
+  * **Where**
     * To check additional conditions
     ```swift
     let yetAnotherPoint = (1, -1)
@@ -1149,14 +1151,14 @@ let newString = String(beginning)
 
 ### Control Transfer Statements
 
-  * Continue
+  * **Continue**
     * Tells a loop to stop what it is doing, and start again at the beginning of the next iteration
-  * Break
+  * **Break**
     * Break In a Loop Statement
     * Break In a Switch Statement
       * Used to match and ignore one or more cases in switch statement
       * Switch does not allow empty case, to deliberately match & ignore a case
-  * Fallthrough
+  * **Fallthrough**
     * Switch statements in Swift do not fall through the bottom of each case into the next one
     * To enable fall through the next case use fallthrough keyword
       ```swift
@@ -1315,7 +1317,7 @@ sayHello("Anna")
       ```
   * Variadic Parameters
     * Accepts 0 or more values for a specified type
-    * [someType]...
+    * **[someType]...**
       ```swift
       func average(numbers: Double...) -> Double
       average(1, 2, 3, 4, 5)
@@ -1325,7 +1327,7 @@ sayHello("Anna")
     * If there are default values as well, place variadic param after all the defaulted parameters
   * In-Out Parameters
     * If you want a function to modify a parameter's value, and want the changes to persist.
-    * Use 'inout' keyword at the start of the parameter definition
+    * Use **inout** at the start of the parameter definition
     * You can only pass a variable not a constant
     * You place an & before a variable's name when you pass it as an argument
     * Can not have default values, and variadic params can not be marked as inout. If you mark it as inout, you can't mark it as var or let
@@ -1395,7 +1397,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     ```
 
     * Can be constant, variable and inout parameters.
-    * **Default values cannot be provided**
+    * Default values cannot be provided
     * Variadic parameters can be used
     * Tuples can also be used as parameter types and return types
       ```swift
@@ -1420,7 +1422,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       ```
 
   * Shorthand Argument Names
-    * $0, $1, $2 (refer to the values of the closure’s arguments)
+    * **$0**, **$1**, **$2** (refer to the values of the closure’s arguments)
     * You can omit closure's argument list from its definition
     * Number and type of arguments will be inferred from the expected function type.
     * The in keyword can also be omitted because the closure expression is made up entirely of its body
@@ -1516,7 +1518,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     alsoIncrementByTen()
     ```
 ### Escaping Closures
-  * @escaping means "Escape from being removed"
+  * **@escaping** means "Escape from being removed"
   * Whenever the closure is passed as an argument to the function, but is called after the function returns.
   * Write @escaping before the parameter’s type to indicate that the closure is allowed to escape.
   * As an example, many functions that start an asynchronous operation take a closure argument as a completion handler.
@@ -1549,7 +1551,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     print(customersInLine.count)
     // Prints "4"
     ```
-  * If you want an autoclosure that is allowed to escape, use both the @autoclosure and @escaping attributes. 
+  * If you want an autoclosure that is allowed to escape, use both the **@autoclosure** and **@escaping** attributes. 
     ```swift
     // customersInLine is ["Barry", "Daniella"]
     var customerProviders: [() -> String] = []
@@ -1596,7 +1598,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     }
     ```
 
-  * Each enum defines a brand new type
+  * Each **enum** defines a brand new type
   * Name should start with a capital letter
   * Singular format
 
@@ -1631,7 +1633,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Iterating
 
-  * Implement 'CaseIterable' protocol to access to 'allCases' property
+  * Implement **CaseIterable** protocol to access to 'allCases' property
   ```swift
   enum Beverage: CaseIterable {
     case coffee, tea, juice
@@ -1646,7 +1648,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * Sometimes it is useful to store associated values of other types along with these member values.
   * This enables you to store additional custom info along with the member value, and permit this info to vary each time you use that member in your code.
   * Associated value can be any given type, and the value type can be different for each member of the enumeration
-  * Enumerations similar to these are known as **discriminated unions, tagged unions and variants** in other programming language.
+  * Enumerations similar to these are known as discriminated unions, tagged unions and variants in other programming language.
 
     ```swift
     enum Barcode {
@@ -1668,7 +1670,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     // Prints "QR code: ABCDEFGHIJKLMNOP."
     ```
 
-    If all of the associated values for an enumeration case are extracted as constants, or if all are extracted as variables, you can place a single var or let annotation before the case name
+    If all of the associated values for an enumeration case are extracted as constants, or if all are extracted as variables, you can place a single **var** or **let** annotation before the case name
     ```swift
     switch productBarcode {
       case let .upc(numberSystem, manufacturer, product, check):
@@ -1681,7 +1683,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Raw Values
 
-  * Enumeration members can come repopulated with default values (raw values), which are all of the same type
+  * Enumeration members can come repopulated with default values (**rawValue**), which are all of the same type
 
     ```swift
     enum ASCIIControlCharacter: Character {
@@ -1733,8 +1735,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Overview
 
-  * Class is Refence Type
-  * Structure (and Enumeration) are Value Type
+  * Class is **Refence Type**
+  * Structure (and Enumeration) are **Value Type**
   * Swift does not require you to create separate interface implementation files for custom classes and structures
   * Thread safe:
   When you pass a class object around your program, you are actually passing a reference to that object, so different parts of your program can share and modify your object. When you pass a structure (or enum), what gets passed around is a copy of the structure. So modifications to structures don’t get shared.
@@ -1804,8 +1806,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
   * Reference types are not copied when they are assigned to a variable/constant or when they are passed to a function. Reference to the same instance is used instead.
   * **Identity Operators**
-    * Comparing if two objects are the same instance (===)
-    * Equal means two instances having the same values (!==)
+    * Comparing if two objects are the same instance (**===**)
+    * Equal means two instances having the same values (**!==**)
   * **Pointers**
     * A swift constant or variable that refers to an instance is similar to a pointer in C, but is not a direct pointer to an address in memory and does not require you to write an asterisk
     * These references are defined like any other constant/variable in Swift
@@ -1869,7 +1871,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Stored Properties
 
-  * Is a constant (let) or variable (var) that is stored as part of an instance of a particular class or structure
+  * Is a constant (**let**) or variable (**var**) that is stored as part of an instance of a particular class or structure
 
     ```swift
     struct FixedLengthRange {
@@ -1893,7 +1895,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
   * Lazy Stored Properties
     * Property whose initial value is not calculated until the first time it is used
-    * Use 'lazy' modifier before its declaration
+    * Use **lazy** modifier before its declaration
     * Must always declare lazy as a var
     * Useful for a property that is dependent on outside factors, whose values are not known after an initialisation completes, e.g. computationally expensive
       ```swift
@@ -1955,7 +1957,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     ```
 
   * Shorthand Setter Declaration
-    * If computed property's setting does not define a name for the new value to be set, "newValue" is used:
+    * If computed property's setting does not define a name for the new value to be set, **newValue** is used:
       ```swift
       set {
         origin.x = newValue.x - (size.width / 2)
@@ -1964,9 +1966,9 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       ```
 
   * Read-Only Computed Properties
-    * Has getter but no setter
-    * You must declare computed properties, including read only properties as variable properties with 'var' keyword, because their value is not fixed.
-    * _You can simplify read-only computed property by removing the get keyword and its braces_:
+    * Has **get** but no **set**
+    * You must declare computed properties, including read only properties as variable properties with **var** keyword, because their value is not fixed.
+    * _You can simplify read-only computed property by removing the **get** keyword and its braces_:
 
     ```swift
     struct Cuboid {
@@ -1987,9 +1989,9 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * Note
     * You don't need to define property observers for non-overridden computed properties, because you can observe and respond to changes to their value directly from within the computed property's setter.
   * You have the option to define either or both of these observers on a property
-    * _willSet_ - called before the value is stored
+    * **willSet** - called before the value is stored
       * default param "newValue", you can override
-    * _didSet_ - called immediately after the new value is stored
+    * **didSet** - called immediately after the new value is stored
       * default old property param name is "oldValue"
   * Note
     * willSet and didSet are not called when a property is first initialised, only called when its value is set outside the initialisation context
@@ -2002,7 +2004,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
         }
       }
       ```
-    * If you pass a property that has observers to a function as an in-out parameter, the willSet and didSet observers are always called. This is because of the copy-in copy-out memory model for in-out parameters: The value is always written back to the property at the end of the function.
+    * If you pass a property that has observers to a function as an in-out parameter, the willSet and didSet observers are always called. This is because of the copy-in copy-out memory model for **in-out** parameters: The value is always written back to the property at the end of the function.
 
 ### Global and Local Variables
 
@@ -2086,7 +2088,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   }
   ```
 
-  * The self property
+  * The **self** property
     * self refers to current instance
     * self disambiguates between method parameter and same named instance properties (setter collision)
     ```swift
@@ -2098,7 +2100,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     }
     ```
 
-  * The Self property (capitalized)
+  * The **Self** property (capitalized)
     * self refers to the containing type when used inside classes, structs, and enums.
     ```swift
     class ImprovedNetworkManager {
@@ -2115,7 +2117,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * Modifying Value Types from Within Instance Methods
     * Structures and enumeration are value types. By Default properties of a value type cannot be modified from within its instance methods.
     * Mutating method modifies the instance properties and can even assign a completely new instance to self.
-    * Use "mutating" keyword before the "func" for the method:
+    * Use **mutating** keyword before the **func** for the method:
       ```swift
       struct Point {
         var x = 0.0, y = 0.0
@@ -2169,8 +2171,8 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 ### Type Methods
 
   * Syntax:
-    * Classes: write keyword "class"
-    * Structures and Enumerations: write keyword "static"
+    * Classes: write keyword **class**
+    * Structures and Enumerations: write keyword **static**
     * Self refers to type itself
     * Accessing type methods from the same scope, doesn't require a self:
 
@@ -2217,7 +2219,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   * Classes, Structures, Enumerations can define subscripts
   * Shortcuts for accessing the member elements of a collection, list or sequence
   * Use subscripts to set/get values by index without the need for separate methods
-    * E.g. someArray[index], someDictionary[key]
+    * E.g. **someArray[index]**, **someDictionary[key]**
   * You can define multiple subscripts for a single type
     * Appropriate subscript overload is based on the type of index value passed to the subscript
     * Not limited to a single dimensions
@@ -2380,7 +2382,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 
 ### Preventing Overrides
 
-  * Mark it as "final", e.g. final var, final func, final class func, final subscript
+  * Mark it as **final**, e.g. final var, final func, final class func, final subscript
 
 [Back to top](#swift-cheatsheet)
 
@@ -2435,7 +2437,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     ```
 
   * Argument Labels
-    * Use "_" as the external name to ommit parameters
+    * Use "**_**" as the external name to ommit parameters
       ```swift
       init(_ celsius: Double) {
         temperatureInCelsius = celsius
@@ -2503,7 +2505,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
 ### Class Type Initialization
 
   * All of class's stored properties must be assigned to an initial value during initialisation
-  * Designated Initializers & Convenience Initializers
+  * **Designated Initializers** & **Convenience Initializers**
     * Designated inits are primary inits for a class
       * Init all properties in that class and calls its superclass chain inits
       * Quite common to have only one
@@ -2575,7 +2577,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
     * Subclasses cannot modify inherited constants properties during initialization
 
   * Automatic Initializers Inheritance
-    * Rule 1: If your subclass does not define any designated inits, it automatically **inherits all its superclass initializers**
+    * Rule 1: If your subclass does not define any designated inits, it automatically inherits all its superclass initializers
     * Rule 2: If your subclass provides an implementation of all its superclass designated initialisers (either by inheriting them or by custom implementation), it automatically inherits all of the superclass convenience inits
     * A subclass can implement a superclass designated init as subclass convenience init
   * Designated and Convenience Example
@@ -2621,7 +2623,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       ```
     * You can override failable init with nofailable one
     * You cannot override nonfailable init failable one
-    * You can delegate from init? to init! and vice versa, and you can override init? with init! and vice versa. You can also delegate from init to init!, although doing so will trigger an assertion if the init! initializer causes initialization to fail.
+    * You can delegate from **init?** to **init!** and vice versa, and you can override init? with init! and vice versa. You can also delegate from init to init!, although doing so will trigger an assertion if the init! initializer causes initialization to fail.
 
   * Required Inits
     * Indicates every subclass must implement that initialiser:
@@ -2632,7 +2634,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
         }
       }
       ```
-    * You do not write the override modifier when overriding:
+    * You do not write the **override** modifier when overriding:
       ```swift
       class SomeSubclass: SomeClass {
         required init() {
@@ -2664,7 +2666,7 @@ class SomeClass {
 ### Overview
 
   * Called immediately before class dealloc
-  * deinit keyword, only for class types
+  * **deinit** keyword, only for class types
   * Not allowed to call a deinit
   * deinits are called automatically
   * Superclass deinit are inherited by their subclasses, and called automatically at the end of a subclass deinit implementation.
@@ -2688,7 +2690,7 @@ class SomeClass {
 
 ### Optional Chaining as an Alternative to Forced Unwrapping
 
-  * Place a question mark (?) after the optional value to chain
+  * Place a question mark (**?**) after the optional value to chain
 
     ```swift
     class Person {
@@ -2767,7 +2769,7 @@ class SomeClass {
     ```
 ### Handling Errors
 There are four ways to handle errors
-  * 1. Propagate the Error using throwing
+  * 1. Propagate the Error using **throws**
     ```swift
     // throws error 
     func vend(itemNamed name: String) throws {
@@ -2788,7 +2790,7 @@ There are four ways to handle errors
     }
     ```
 
-  * 2. Do-Catch
+  * 2. **do-Catch**
     ```swift
     do {
         try buyFavoriteSnack(person: "Alice", vendingMachine: vendingMachine)
@@ -2827,7 +2829,7 @@ There are four ways to handle errors
     ```
 
   * 4. Disabling Error Propagation
-    * Use "try!" if you are sure there will be no error (runtime error otherwise).
+    * Use **try!** if you are sure there will be no error (runtime error otherwise).
 
 ### Defer
   * Defer executes just before leaving the current block.
@@ -2957,6 +2959,7 @@ There are four ways to handle errors
 
 ### Overview
 
+  * Use **extension**
   * Add new functionality to existing class, structure or enumeration type
   * Extensions can add new functionality, but cannot override existing one
   * Extend types for which you do not have access to the original source code (retroactive modelling)
@@ -3064,6 +3067,7 @@ extension Int {
 
 ### Overiew
 
+  * Use **protocol**
   * Does not provide an implementation, only describes what an implementation will look like
   * Can be adopted by a class, structure or enumeration
   * Any type that satisfies the requirements conforms to that protocol
@@ -3094,7 +3098,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     }
     ```
 
-  * Type property protocol. Use "static" keyword
+  * Type property protocol. Use **static** keyword
 
     ```swift
     protocol AnotherProtocol {
@@ -3318,7 +3322,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 ### Protocol Composition
 
   * You can combine multiple protocols into a single protocol composition.
-    * protocol<SomeProtocol, AnotherProtocol>
+    * **protocol<SomeProtocol, AnotherProtocol>**
     ```swift
     protocol Named {
         var name: String { get }
@@ -3341,7 +3345,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * Protocol compositions do not define a new, permanent protocol type, rather they define a temporary local protocol that has the combined requirements of all protocols in the composition.
 
 ### Protocol Conformance
-  * is operator returns true if an instance conforms to a protocol and returns false if it does not.
+  * **is** operator returns true if an instance conforms to a protocol and returns false if it does not.
   * **as?** returns an optional value of the protocol’s type, and this value is nil if the instance does not conform to that protocol.
   * **as!** forces the downcast to the protocol type and triggers a runtime error if the downcast does not succeed.
     ```swift
@@ -3370,7 +3374,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     ```
 
 ### Protocol Constraints
-  * Use "where" keyword
+  * Use **where** keyword
     ```swift
     extension Collection where Iterator.Element: TextRepresentable {
         var textualDescription: String {
@@ -3415,8 +3419,8 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * Once you specify the type parameter, you can use it to define the type of a function's parameter, function's return type and or as a type annotation within the body of the function
     * You can provide more than one type parameter by writing type parameter name within the angle bracket.
   * Naming Type Parameters
-    * Traditional to use single-character name **T**, but you can use any valid identifier for the type parameter name with Capital letter (Array<Element>)
-    * Allowed generic types with multiple parameters (Dictionary<Key, Value>)
+    * Traditional to use single-character name **T**, but you can use any valid identifier for the type parameter name with Capital letter (Array<**Element**>)
+    * Allowed generic types with multiple parameters (Dictionary<**Key, Value**>)
   * Custom classes, structures, and enumerations that can work with any type, similar to Array and Dictionary
 
   
@@ -3477,7 +3481,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
   * Overview
     * When defining a protocol, sometimes, it is useful to declare one or more associated types as part of the protocol's definition.
-    * **typealiase** gives a placeholder name to a type that is used as part of the protocol
+    * **typealias** gives a placeholder name to a type that is used as part of the protocol
     * Actual type to use for the associated type is not specified until the protocol is adopted
     ```swift
     // Container protocol declares ItemType associated type
@@ -3598,7 +3602,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
     * Unowned references
       * Use unowned when the other instance has the same or longer lifetime.
   * Weak References
-    * Use "weak"
+    * Use **weak**
     * Optional variable, constant not allowed
     * ARC will set to nil when it is deallocated
       ```swift
@@ -3616,7 +3620,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
       }
       ```
   * Unowned References
-    * Use "unowned"
+    * Use **unowned**
     * Non-optional variable (must have a value)
     * ARC cannot set the reference to nil when it is deallocated
       ```swift
@@ -3700,7 +3704,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
 
   * **Overview**
     * 5 different access levels (Least to most restrictive)
-      * Open access and Public access
+      * **Open access** and **Public access**
         * Entities to be used within any source file from their defining module and also in a source file from another module that imports the defining module
         * Used when specifying the public interface to a framework
         * Open access applies only to classes and class members, and it differs from public access as follows:
@@ -3708,13 +3712,13 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
           * Class members with public access, or any more restrictive access level, can be overridden by subclasses only within the module where they’re defined.
           * Open classes can be subclassed within the module where they’re defined, and within any module that imports the module where they’re defined.
           * Open class members can be overridden by subclasses within the module where they’re defined, and within any module that imports the module where they’re defined.
-      * Internal access
+      * **Internal access**
         * Entities to be used within any source file from their defining module, but not in any source file outside that module
         * Used when defining an app's or framework's internal structure
-      * File Private access
+      * **File Private access**
         * Entities to be used within its own defining source file
         * Used when wanting to hide the implementation details of a specific piece of functionality.
-      * Private access
+      * **Private access**
         * Restrict the use of an entity to the enclosing declaration, and to extensions in the same file.
         * Used when wanting to hide the implementation details of a specific piece of functionality when those details are used only within a single declaration.
 
