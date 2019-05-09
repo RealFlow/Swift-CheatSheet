@@ -33,7 +33,7 @@ Notes taken from [The Swift Programming Language](https://developer.apple.com/li
 - [Attributes](#attributes)
 - [Advanced Operators](#advanced-operators)
 
-<div style="page-break-after: always;"></div>
+\pagebreak
 
 ## The Basics
 
