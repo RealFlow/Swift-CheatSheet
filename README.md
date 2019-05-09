@@ -2085,7 +2085,7 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
   }
   ```
 
-  * The self Property
+  * The self property
     * self refers to current instance
     * self disambiguates between method parameter and same named instance properties (setter collision)
     ```swift
@@ -2094,6 +2094,20 @@ func chooseStepFunction(backwards: Bool) -> (Int) -> Int {
       func isToTheRightOf(x: Double) -> Bool {
         return self.x > x
       }
+    }
+    ```
+
+  * The Self property (capitalized)
+    * self refers to the containing type when used inside classes, structs, and enums.
+    ```swift
+    class ImprovedNetworkManager {
+        class var maximumActiveRequests: Int {
+            return 4
+            }
+
+        func printDebugData() {
+          print("Maximum network requests: \(Self.maximumActiveRequests).")
+        }
     }
     ```
 
